@@ -2,8 +2,17 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
-  tags: []
+  serializedVersion: 3
+  tags:
+  - Hider
+  - Seeker
+  - Wall
+  - Box
+  - Box Hider Lock
+  - Box Seeker Lock
+  - Ramp
+  - Ramp Hider Lock
+  - Ramp Seeker Lock
   layers:
   - Default
   - TransparentFX
@@ -11,11 +20,11 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Hider
+  - Seeker
+  - Wall
+  - Ramp
+  - Box
   - 
   - 
   - 
@@ -50,27 +59,3 @@ TagManager:
   - Light Layer 5
   - Light Layer 6
   - Light Layer 7
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 

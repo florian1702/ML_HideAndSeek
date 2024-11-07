@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.MLAgents;
-using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Sensors;
 using System.Collections.Generic;
 
 public class HiderAgent : Agent
@@ -14,30 +14,20 @@ public class HiderAgent : Agent
     [SerializeField] private float rotationSpeed = 360f;
     [SerializeField] private float grabDistance = 2f;
     [SerializeField] private float holdBreakDistance = 4f;
-    [SerializeField] private bool isHiding = true;
 
     private Vector2 movementInput = Vector2.zero;
     private float rotationInput = 0f;
-
     private Interactable grabbedInteractable;
     private Quaternion targetRelativeRotation;
-
-    public Rigidbody Rigidbody { get { return rigidbody; } }
-    //public HideAndSeekAgent HideAndSeekAgent { get { return hideAndSeekAgent; } }
-    
-    public bool IsHiding { get { return isHiding; } }
-
+    public Rigidbody Rigidbody { get { return rigidbody; } }    
     public bool IsHolding { get { return grabbedInteractable != null; } }
-    public bool WasCaptured { get; set; } = false;
-
     public GameManager GameManager { get; set; }
-
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float moveX = actions.ContinuousActions[0];
-        float moveZ = actions.ContinuousActions[1];
-        float rotation = actions.ContinuousActions[2];
+        float moveX = Mathf.Clamp(actions.ContinuousActions[0], -1f, 1f);
+        float moveZ = Mathf.Clamp(actions.ContinuousActions[1], -1f, 1f);
+        float rotation = Mathf.Clamp(actions.ContinuousActions[2], -1f, 1f);
 
         ApplyMovement(new Vector2(moveX, moveZ));
         ApplyRotation(rotation);
@@ -48,16 +38,16 @@ public class HiderAgent : Agent
         }
         else if (IsHolding)
         {
-            ReleaseBox();
+            ReleaseInteractable();
         }
 
         if (actions.DiscreteActions[1] == 1)
         {
-            LockBox(true);
+            LockInteractable(true);
         }
         else if (actions.DiscreteActions[1] == 2)
         {
-            LockBox(false);
+            LockInteractable(false);
         }
 
         if (GameManager.DebugDrawIndividualReward)
@@ -74,12 +64,10 @@ public class HiderAgent : Agent
     {
         Vector3 platformCenter = GameManager.transform.position;
 
-        // self -- 9 floats
+        // self -- 7 floats
         sensor.AddObservation(transform.position - platformCenter);
         sensor.AddObservation(NormalizeAngle(transform.rotation.eulerAngles.y));
         sensor.AddObservation(Rigidbody.linearVelocity);
-        sensor.AddObservation(IsHiding);
-        sensor.AddObservation(WasCaptured);
 
         IEnumerable<HiderAgent> teamAgents = GameManager.GetHiders();
 
@@ -94,20 +82,9 @@ public class HiderAgent : Agent
                 obs[4] = teamAgent.rigidbody.linearVelocity.x;
                 obs[5] = teamAgent.rigidbody.linearVelocity.y;
                 obs[6] = teamAgent.rigidbody.linearVelocity.z;
-                //obs[7] = teamAgent.WasCaptured ? 1.0f : 0.0f;
 
                 teamBufferSensor.AppendObservation(obs);
         }
-
-        var rayOutputs = RayPerceptionSensor.Perceive(rayPerceptionSensors.GetRayPerceptionInput(), false).RayOutputs;
-        int lengthOfRayOutputs = rayOutputs.Length;
-        /*
-        for (int i = 0; i < dummyRaycastSensorSizes.Length; i++)
-        {
-            float[] dummyObs = new float[dummyRaycastSensorSizes[i]];
-            dummyRaycastSensors[i].GetSensor().AddObservation(dummyObs);
-        }
-        */
     }
 
     public override void OnEpisodeBegin()
@@ -117,8 +94,32 @@ public class HiderAgent : Agent
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        actionsOut.ContinuousActions.Array[1] = 1f;
-        actionsOut.ContinuousActions.Array[2] = GetObservations()[7] - 0.5f;
+       
+        movementInput = Vector2.zero;
+        //rotationInput = Vector2.zero;
+
+        if(Input.GetKey(KeyCode.W)) movementInput += Vector2.up;
+        if(Input.GetKey(KeyCode.S)) movementInput += Vector2.down;
+        if(Input.GetKey(KeyCode.A)) movementInput += Vector2.left;
+        if(Input.GetKey(KeyCode.D)) movementInput += Vector2.right;
+        movementInput.Normalize();
+        ApplyMovement(movementInput * Time.deltaTime);
+
+        /*if(Input.GetKey(KeyCode.Q))
+            continiousActionsOut[2] = -1.0f;
+        else if(Input.GetKey(KeyCode.E))
+            continiousActionsOut[2] = 1.0f;
+        else
+            continiousActionsOut[2] = 0.0f;
+*/
+        if(Input.GetKey(KeyCode.Alpha1))
+            GrabInteractable();
+        if(!Input.GetKey(KeyCode.Alpha1) && IsHolding)
+            ReleaseInteractable();
+        else if(Input.GetKey(KeyCode.Alpha2))
+            LockInteractable(true);
+        else if(Input.GetKey(KeyCode.Alpha3))
+            LockInteractable(false);
     }
 
     // Input: angle in degrees
@@ -132,11 +133,7 @@ public class HiderAgent : Agent
 
     void FixedUpdate()
     {
-        if (!WasCaptured && (isHiding || GameManager.PreparationPhaseEnded))
-        {
-            Movement();
-        }
-
+        Movement();
         movementInput = Vector2.zero;
         rotationInput = 0f;
     }
@@ -204,6 +201,7 @@ public class HiderAgent : Agent
 
     public void GrabInteractable()
     {
+        Debug.Log("grab");
         if (grabbedInteractable == null)
         {
             if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
@@ -222,8 +220,9 @@ public class HiderAgent : Agent
         }
     }
 
-    public void ReleaseBox()
+    public void ReleaseInteractable()
     {
+        Debug.Log("release");
         if (grabbedInteractable != null)
         {
             grabbedInteractable.Release();
@@ -231,12 +230,15 @@ public class HiderAgent : Agent
         }
     }
 
-    public void LockBox(bool tryLock)
+    public void LockInteractable(bool tryLock)
     {
+        if(tryLock)Debug.Log("Lock");
+        else Debug.Log("Unlock");
         if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
         {
             if (hit.distance < grabDistance && IsInteractable(hit.collider))
             {
+                Debug.Log("hit interactable");
                 Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
                 interactable.TryLockUnlock(this, tryLock);
             }
@@ -249,14 +251,13 @@ public class HiderAgent : Agent
         rigidbody.linearVelocity = Vector3.zero;
         rigidbody.angularVelocity = Vector3.zero;
         grabbedInteractable = null;
-        WasCaptured = false;
         gameObject.SetActive(true);
     }
 
     private bool IsInteractable(Collider collider)
     {
-        return collider.CompareTag("Box") || collider.CompareTag("Box Hider Lock") || collider.CompareTag("Box Seeker Lock") 
-        || collider.CompareTag("Ramp") || collider.CompareTag("Ramp Hider Lock") || collider.CompareTag("Ramp Seeker Lock");
+        return collider.CompareTag("Box") || collider.CompareTag("Box Hider Lock") || collider.CompareTag("Box Seeker Lock") ||
+                collider.CompareTag("Ramp") || collider.CompareTag("Ramp Hider Lock") || collider.CompareTag("Ramp Seeker Lock");
     }
 
 
@@ -267,6 +268,4 @@ public class HiderAgent : Agent
             Gizmos.DrawLine(transform.position, grabbedInteractable.transform.position);
         }
     }
-
-    
 }

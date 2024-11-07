@@ -29,24 +29,25 @@ public class MapGenerator : MonoBehaviour
     [Header("Object placement")]
     // instantiateBoxes must be on if box count should be randomized every episode
     [SerializeField] private bool instantiateInteractables = true;
-    [SerializeField] private Box[] boxPrefabs = null;
-    [SerializeField] private Ramp[] rampPrefabs = null;
+    [SerializeField] private Transform interactableParent = null;
+    [SerializeField] private Box boxPrefab = null;
+    [SerializeField] private Ramp rampPrefab = null;
     [SerializeField] private int numBoxesMin = 2;
-    [SerializeField] private int numBoxesMax = 4;
-    [SerializeField] private int numRampsMin = 2;
-    [SerializeField] private int numRampsMax = 4;
-    [SerializeField] private float boxY = 2f;
-    [SerializeField] private float rampY = 2f;
+    [SerializeField] private int numBoxesMax = 2;
+    [SerializeField] private int numRampsMin = 1;
+    [SerializeField] private int numRampsMax = 1;
+    [SerializeField] private float boxY = 1.0f;
+    [SerializeField] private float rampY = 0.0f;
     [SerializeField] private float objectRadius = 2.5f;
 
     [Header("Subroom generation")]
-    [SerializeField] private bool generateSubroom = false;
+    [SerializeField] private bool generateSubroom = true;
     [SerializeField] private float roomSize = 10f;
     [SerializeField] private float doorWidth = 2.5f;
 
     private const int numTriesAgent = 50;
-    private const int numTriesBox = 30;
-    private const int numTriesRamp = 30;
+    private const int numTriesBox = 20;
+    private const int numTriesRamp = 20;
 
     private List<GameObject> generatedWalls = null;
 
@@ -57,6 +58,8 @@ public class MapGenerator : MonoBehaviour
 
     public int NumHiders { get; private set; } = 0;
     public int NumSeekers { get; private set; } = 0;
+    public int NumBoxes { get; private set; } = 0;
+    public int NumRamps { get; private set; } = 0;
     public List<HiderAgent> GetInstantiatedHiders() => hiders.ToList();
     public List<SeekerAgent> GetInstantiatedSeekers() => seekers.ToList();
 
@@ -64,20 +67,15 @@ public class MapGenerator : MonoBehaviour
     {
         hiders = Enumerable.Range(0, numHidersMax).Select(_ => Instantiate(hiderPrefab, agentParent)).ToArray();
         seekers = Enumerable.Range(0, numSeekersMax).Select(_ => Instantiate(seekerPrefab, agentParent)).ToArray();
-
-        if (!instantiateInteractables)
-        {
-            boxes = FindObjectsByType<Box>(0);
-            ramps = FindObjectsByType<Ramp>(0);
-        }
     }
 
     public void Generate()
     {
+        // Destroy all Walls and create a new list
         generatedWalls?.ForEach((GameObject wall) => Destroy(wall));
         generatedWalls = new List<GameObject>();
-        GenerateMainRoom();
         
+        // Destroy all Interactables
         if (instantiateInteractables)
         {
             if (boxes != null)
@@ -90,12 +88,17 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
+        // Generate Mainroom
+        GenerateMainRoom();
+
+        // Generate Subroom
         if (generateSubroom)
         {
             PlaceSubroomWalls(0f);
             PlaceSubroomWalls(-90f);
         }
 
+        //Place Agents and Interactables
         PlaceStuff();
     }
 
@@ -151,10 +154,15 @@ public class MapGenerator : MonoBehaviour
 
     private void PlaceStuff()
     {
+        // List of all Positions and Radius
         List<(Vector2, float)> itemPlacement = new List<(Vector2, float)>();
 
+        // Pick Random Number for Agents and Interactables
         NumHiders = Random.Range(numHidersMin, numHidersMax + 1);
         NumSeekers = Random.Range(numSeekersMin, numSeekersMax + 1);
+        
+        
+        //Find place for hiders
         for (int i = 0; i < NumHiders; i++)
         {
             if (!TryPlaceObject(itemPlacement, PickPointHider, agentRadius, numTriesAgent))
@@ -164,6 +172,8 @@ public class MapGenerator : MonoBehaviour
                 return;
             }
         }
+
+        //Find place for seekers
         for (int i = 0; i < NumSeekers; i++)
         {
             if (!TryPlaceObject(itemPlacement, PickPointSeeker, agentRadius, numTriesAgent))
@@ -174,29 +184,7 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        int numBoxes = instantiateInteractables ? Random.Range(numBoxesMin, numBoxesMax + 1) : boxes.Length;
-        for (int i = 0; i < numBoxes; i++)
-        {
-            if (!TryPlaceObject(itemPlacement, PickPointBox, objectRadius, numTriesBox))
-            {
-                Debug.LogWarning("Couldn't randomize box placement");
-                numBoxes = i;
-                break;
-            }
-        }
-
-        int numRamps = instantiateInteractables ? Random.Range(numRampsMin, numRampsMax + 1) : ramps.Length;
-        for (int i = 0; i < numRamps; i++)
-        {
-            if (!TryPlaceObject(itemPlacement, PickPointRamp, objectRadius, numTriesRamp))
-            {
-                Debug.LogWarning("Couldn't randomize ramp placement");
-                numRamps = i;
-                break;
-            }
-        }
-
-        
+        //Set position and random rotation of hiders
         for (int i = 0; i < NumHiders; i++)
         {
             float x = itemPlacement[i].Item1.x;
@@ -204,6 +192,8 @@ public class MapGenerator : MonoBehaviour
             hiders[i].transform.position = new Vector3(x, agentY, z) + transform.position;
             hiders[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }
+
+        //Set position and random rotation of seekers
         for (int i = 0; i < NumSeekers; i++)
         {
             int id = i + NumHiders;
@@ -211,39 +201,51 @@ public class MapGenerator : MonoBehaviour
             float z = itemPlacement[id].Item1.y;
             seekers[i].transform.position = new Vector3(x, agentY, z) + transform.position;
             seekers[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
-        }
+        }    
 
-        if (instantiateInteractables)
-        {
-            boxes = new Box[numBoxes];
-            ramps = new Ramp[numRamps];
-        }
-        for (int i = 0; i < numBoxes; i++)
-        {
-            int id = i + NumHiders + NumSeekers;
-            float x = itemPlacement[id].Item1.x;
-            float z = itemPlacement[id].Item1.y;
-            if (instantiateInteractables)
-            {
-                Box boxPrefab = boxPrefabs[Random.Range(0, boxPrefabs.Length)];
-                boxes[i] = Instantiate(boxPrefab);
-            }
-            boxes[i].transform.position = new Vector3(x, boxY, z) + transform.position;
-            boxes[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
-        }
 
-        for (int i = 0; i < numRamps; i++)
-        {
-            int id = i + NumHiders + NumSeekers + numBoxes;
-            float x = itemPlacement[id].Item1.x;
-            float z = itemPlacement[id].Item1.y;
-            if (instantiateInteractables)
+        if(instantiateInteractables){
+            NumBoxes = Random.Range(numBoxesMin, numBoxesMax + 1);
+            NumRamps = Random.Range(numRampsMin, numRampsMax + 1);
+
+            //Find place for Boxes
+            for (int i = 0; i < NumBoxes; i++)
             {
-                Ramp rampPrefab = rampPrefabs[Random.Range(0, rampPrefabs.Length)];
-                ramps[i] = Instantiate(rampPrefab);
+                if (!TryPlaceObject(itemPlacement, PickPointBox, objectRadius, numTriesBox))
+                {
+                    Debug.LogWarning("Couldn't randomize box placement");
+                    break;
+                }
             }
-            ramps[i].transform.position = new Vector3(x, rampY, z) + transform.position;
-            ramps[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
+
+            //Find place for Ramps
+            for (int i = 0; i < NumRamps; i++)
+            {
+                if (!TryPlaceObject(itemPlacement, PickPointRamp, objectRadius, numTriesRamp))
+                {
+                    Debug.LogWarning("Couldn't randomize ramp placement");
+                    break;
+                }
+            }
+
+            boxes = new Box[NumBoxes];
+            ramps = new Ramp[NumRamps];
+
+            for (int i = 0; i < NumBoxes; i++)
+            {
+                int id = i + NumHiders + NumSeekers;
+                float x = itemPlacement[id].Item1.x;
+                float z = itemPlacement[id].Item1.y;
+                boxes[i] = Instantiate(boxPrefab, new Vector3(x, boxY, z) + transform.position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+            }
+
+            for (int i = 0; i < NumRamps; i++)
+            {
+                int id = i + NumHiders + NumSeekers + NumBoxes;
+                float x = itemPlacement[id].Item1.x;
+                float z = itemPlacement[id].Item1.y;
+                ramps[i] = Instantiate(rampPrefab, new Vector3(x, rampY, z) + transform.position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+            }
         }
     }
 

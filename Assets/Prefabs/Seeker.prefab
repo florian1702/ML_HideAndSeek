@@ -346,6 +346,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: eebe4a44715b6914b939d77804ee58bc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7499427739449632270}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: eebe4a44715b6914b939d77804ee58bc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4259015641399285777}
   m_SourcePrefab: {fileID: 100100000, guid: eebe4a44715b6914b939d77804ee58bc, type: 3}
 --- !u!1 &908138624847753546 stripped
 GameObject:
@@ -418,15 +421,14 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
-  teamBufferSensor: {fileID: 0}
+  teamBufferSensor: {fileID: 4259015641399285777}
   rayPerceptionSensors: {fileID: 7499427739449632270}
   rigidbody: {fileID: 4784608304789591355}
-  runSpeed: 5
+  runSpeed: 7.5
   drag: 0.3
   rotationSpeed: 360
   grabDistance: 2
   holdBreakDistance: 4
-  isHiding: 0
 --- !u!114 &4839297723995092882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,7 +442,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 9
+    VectorObservationSize: 8
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 3
@@ -470,7 +472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DecisionPeriod: 4
+  DecisionPeriod: 5
   DecisionStep: 0
   TakeActionsBetweenDecisions: 1
 --- !u!114 &7499427739449632270
@@ -489,13 +491,20 @@ MonoBehaviour:
   m_DetectableTags:
   - Wall
   - Hider
+  - Seeker
+  - Box
+  - Box Hider Lock
+  - Box Seeker Lock
+  - Ramp
+  - Ramp Hider Lock
+  - Ramp Seeker Lock
   m_RaysPerDirection: 15
   m_MaxRayDegrees: 180
   m_SphereCastRadius: 0.5
   m_RayLength: 20
   m_RayLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967112
+    m_Bits: 4294967240
   m_ObservationStacks: 1
   m_AlternatingRayOrder: 1
   m_UseBatchedRaycasts: 0
@@ -503,6 +512,21 @@ MonoBehaviour:
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
   m_StartVerticalOffset: 1
   m_EndVerticalOffset: 0
+--- !u!114 &4259015641399285777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908138624847753546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd8012d5925524537b27131fef517017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SensorName: BufferSensor
+  m_ObservableSize: 8
+  m_MaxNumObservables: 3
 --- !u!4 &8756672977205122572 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -441703263343781353, guid: eebe4a44715b6914b939d77804ee58bc, type: 3}

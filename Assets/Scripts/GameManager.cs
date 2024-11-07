@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
         hidersGroup = new SimpleMultiAgentGroup();
         seekersGroup = new SimpleMultiAgentGroup();
 
-        interactableObjects = FindObjectsByType<Interactable>(0).ToList();
+        //interactableObjects = FindObjectsByType<Interactable>(FindObjectsSortMode.None).ToList();
 
         statsRecorder = Academy.Instance.StatsRecorder;
 
@@ -181,6 +181,7 @@ public class GameManager : MonoBehaviour
         hidersPerfectGame = true;
         episodeTimer = 0;
 
+        /*
         if (!mapGenerator.InstantiatesInteractables())
         {
             foreach (Interactable interactable in interactableObjects)
@@ -188,6 +189,7 @@ public class GameManager : MonoBehaviour
                 interactable.Reset();
             }
         }
+        */
 
         mapGenerator.Generate();
         hiders = hiderInstances.Take(mapGenerator.NumHiders).ToList();

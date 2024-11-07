@@ -17,32 +17,18 @@ public class SeekerAgent : Agent
 
     private Vector2 movementInput = Vector2.zero;
     private float rotationInput = 0f;
-
     private Interactable grabbedInteractable;
     private Quaternion targetRelativeRotation;
-
-    public Rigidbody Rigidbody { get { return rigidbody; } }
-    //public HideAndSeekAgent HideAndSeekAgent { get { return hideAndSeekAgent; } }
-    
+    public Rigidbody Rigidbody { get { return rigidbody; } }    
     public bool IsHolding { get { return grabbedInteractable != null; } }
     public bool WasCaptured { get; set; } = false;
-
     public GameManager GameManager { get; set; }
-
-    private const float mouseSensitivityY = 360f;
-
-
-    private Vector2 controlledRotation = Vector2.zero;
-    private Vector2 controlledMovement = Vector2.zero;
-    private float pitch = 0f;
-    private const float maxPitch = 80f;
-
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float moveX = actions.ContinuousActions[0];
-        float moveZ = actions.ContinuousActions[1];
-        float rotation = actions.ContinuousActions[2];
+        float moveX = Mathf.Clamp(actions.ContinuousActions[0], -1f, 1f);
+        float moveZ = Mathf.Clamp(actions.ContinuousActions[1], -1f, 1f);
+        float rotation = Mathf.Clamp(actions.ContinuousActions[2], -1f, 1f);
 
         ApplyMovement(new Vector2(moveX, moveZ));
         ApplyRotation(rotation);
@@ -98,20 +84,9 @@ public class SeekerAgent : Agent
                 obs[4] = teamAgent.rigidbody.linearVelocity.x;
                 obs[5] = teamAgent.rigidbody.linearVelocity.y;
                 obs[6] = teamAgent.rigidbody.linearVelocity.z;
-                //obs[7] = teamAgent.WasCaptured ? 1.0f : 0.0f;
 
                 teamBufferSensor.AppendObservation(obs);
         }
-
-        var rayOutputs = RayPerceptionSensor.Perceive(rayPerceptionSensors.GetRayPerceptionInput(), false).RayOutputs;
-        int lengthOfRayOutputs = rayOutputs.Length;
-        /*
-        for (int i = 0; i < dummyRaycastSensorSizes.Length; i++)
-        {
-            float[] dummyObs = new float[dummyRaycastSensorSizes[i]];
-            dummyRaycastSensors[i].GetSensor().AddObservation(dummyObs);
-        }
-        */
     }
 
     public override void OnEpisodeBegin()
@@ -121,32 +96,31 @@ public class SeekerAgent : Agent
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
+         movementInput = Vector2.zero;
+        //rotationInput = Vector2.zero;
 
-        controlledMovement = Vector2.zero;
-        controlledRotation = Vector2.zero;
+        if(Input.GetKey(KeyCode.W)) movementInput += Vector2.up;
+        if(Input.GetKey(KeyCode.S)) movementInput += Vector2.down;
+        if(Input.GetKey(KeyCode.A)) movementInput += Vector2.left;
+        if(Input.GetKey(KeyCode.D)) movementInput += Vector2.right;
+        movementInput.Normalize();
+        ApplyMovement(movementInput * Time.deltaTime);
 
-        if (Input.GetKey(KeyCode.W)) controlledMovement += Vector2.up;
-        if (Input.GetKey(KeyCode.S)) controlledMovement += Vector2.down;
-        if (Input.GetKey(KeyCode.A)) controlledMovement += Vector2.left;
-        if (Input.GetKey(KeyCode.D)) controlledMovement += Vector2.right;
-        controlledMovement.Normalize();
-        ApplyMovement(controlledMovement * Time.deltaTime);
-
-        controlledRotation += Input.GetAxis("Mouse X") * Vector2.right;
-        controlledRotation += Input.GetAxis("Mouse Y") * Vector2.up;
-
-        ApplyRotation(controlledRotation.x);
-        pitch = Mathf.Clamp(pitch - controlledRotation.y * mouseSensitivityY * Time.deltaTime, -maxPitch, maxPitch);
-
-        if (Input.GetKeyDown(KeyCode.E)) GrabInteractable();
-
-        if (!Input.GetKey(KeyCode.E) && IsHolding)
-        {
+        /*if(Input.GetKey(KeyCode.Q))
+            continiousActionsOut[2] = -1.0f;
+        else if(Input.GetKey(KeyCode.E))
+            continiousActionsOut[2] = 1.0f;
+        else
+            continiousActionsOut[2] = 0.0f;
+*/
+        if(Input.GetKey(KeyCode.Alpha1))
+            GrabInteractable();
+        if(!Input.GetKey(KeyCode.Alpha1) && IsHolding)
             ReleaseInteractable();
-        }
-
-        if (Input.GetKeyDown(KeyCode.L)) LockInteractable(true);
-        if (Input.GetKeyDown(KeyCode.U)) LockInteractable(false);
+        else if(Input.GetKey(KeyCode.Alpha2))
+            LockInteractable(true);
+        else if(Input.GetKey(KeyCode.Alpha3))
+            LockInteractable(false);
     }
 
     // Input: angle in degrees
@@ -160,7 +134,7 @@ public class SeekerAgent : Agent
 
     void FixedUpdate()
     {
-        if (!WasCaptured && (isHiding || GameManager.PreparationPhaseEnded))
+        if (GameManager.PreparationPhaseEnded)
         {
             Movement();
         }
@@ -283,7 +257,8 @@ public class SeekerAgent : Agent
 
     private bool IsInteractable(Collider collider)
     {
-        return collider.CompareTag("Interactable") || collider.CompareTag("Interactable Hider Lock") || collider.CompareTag("Interactable Seeker Lock");
+        return collider.CompareTag("Box") || collider.CompareTag("Box Hider Lock") || collider.CompareTag("Box Seeker Lock") ||
+                collider.CompareTag("Ramp") || collider.CompareTag("Ramp Hider Lock") || collider.CompareTag("Ramp Seeker Lock");
     }
 
 

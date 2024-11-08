@@ -34,7 +34,7 @@
 ## About The Project
 <div align="center">
   
-;ulti-agent hide-and-seek game inspired by OpenAI. Utilizing Unity and the ML-Agents toolkit, the project focuses on creating intelligent agents that learn and adapt their strategies over time through reinforcement learning. 
+Multi-agent hide-and-seek game inspired by OpenAI. Utilizing Unity and the ML-Agents toolkit, the project focuses on creating intelligent agents that learn and adapt their strategies over time through reinforcement learning. 
 The seekers will enhance their detection skills while the hiders develop clever tactics to evade capture.
 
 </div>

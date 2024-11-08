@@ -84,7 +84,7 @@ Florian Wößner - flo-woe@web.de
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/linkedin_username
 [product-screenshot]: images/screenshot.png
-[cscom]: https://custom-icon-badges.demolab.com/badge/C%23-%23239120.svg?logo=cshrp&logoColor=white
+[cs.com]: https://custom-icon-badges.demolab.com/badge/C%23-%23239120.svg?logo=cshrp&logoColor=white
 [cs-url]: https://learn.microsoft.com/en-us/dotnet/csharp/
 [unity.com]: https://img.shields.io/badge/Unity-%23000000.svg?logo=unity&logoColor=white
 [unity-url]: https://unity.com/

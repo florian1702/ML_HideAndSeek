@@ -26,7 +26,7 @@
 <br />
 <div align="center">
 
-<h3 align="center">Multi-Agent Hide and Seek</h3>
+<h3 align="center"> Multi-Agent Hide and Seek</h3>
 
 </div>
 

@@ -65,7 +65,7 @@ public class Interactable : MonoBehaviour
 
     public bool TryGrab(Agent agent)
     {
-        if (lockOwner != null || owner != null)
+        if(lockOwner != null || owner != null)
         {
             return false;
         }

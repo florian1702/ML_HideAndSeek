@@ -6,20 +6,24 @@ using System.Collections.Generic;
 
 public class HiderAgent : Agent
 {
+    [Header("Sensors")]
     [SerializeField] private BufferSensorComponent teamBufferSensor = null;
     [SerializeField] private RayPerceptionSensorComponent3D rayPerceptionSensors = null;
-    [SerializeField] private new Rigidbody rigidbody = null;
-    [SerializeField] private float runSpeed = 1f;
-    [SerializeField] private float drag = 0.3f;
-    [SerializeField] private float rotationSpeed = 360f;
+
+    [Header("Movement")]
+    [SerializeField] private CharacterController characterController;
+    [SerializeField] private float moveSpeed = 1f;
+    [SerializeField] private float rotationSpeed = 500f;
+
+    [Header("Interacting")]
     [SerializeField] private float grabDistance = 2f;
     [SerializeField] private float holdBreakDistance = 4f;
 
     private Vector2 movementInput = Vector2.zero;
     private float rotationInput = 0f;
+    private float currentRotationVelocity;
     private Interactable grabbedInteractable;
     private Quaternion targetRelativeRotation;
-    public Rigidbody Rigidbody { get { return rigidbody; } }    
     public bool IsHolding { get { return grabbedInteractable != null; } }
     public GameManager GameManager { get; set; }
 
@@ -67,7 +71,7 @@ public class HiderAgent : Agent
         // self -- 7 floats
         sensor.AddObservation(transform.position - platformCenter);
         sensor.AddObservation(NormalizeAngle(transform.rotation.eulerAngles.y));
-        sensor.AddObservation(Rigidbody.linearVelocity);
+        sensor.AddObservation(characterController.velocity);
 
         IEnumerable<HiderAgent> teamAgents = GameManager.GetHiders();
 
@@ -79,9 +83,9 @@ public class HiderAgent : Agent
                 obs[1] = teamAgentPosition.y;
                 obs[2] = teamAgentPosition.z;
                 obs[3] = NormalizeAngle(teamAgent.transform.rotation.eulerAngles.y);
-                obs[4] = teamAgent.rigidbody.linearVelocity.x;
-                obs[5] = teamAgent.rigidbody.linearVelocity.y;
-                obs[6] = teamAgent.rigidbody.linearVelocity.z;
+                obs[4] = teamAgent.characterController.velocity.x;
+                obs[5] = teamAgent.characterController.velocity.y;
+                obs[6] = teamAgent.characterController.velocity.z;
 
                 teamBufferSensor.AppendObservation(obs);
         }
@@ -96,7 +100,7 @@ public class HiderAgent : Agent
     {
        
         movementInput = Vector2.zero;
-        //rotationInput = Vector2.zero;
+        rotationInput = 0;
 
         if(Input.GetKey(KeyCode.W)) movementInput += Vector2.up;
         if(Input.GetKey(KeyCode.S)) movementInput += Vector2.down;
@@ -105,17 +109,16 @@ public class HiderAgent : Agent
         movementInput.Normalize();
         ApplyMovement(movementInput * Time.deltaTime);
 
-        /*if(Input.GetKey(KeyCode.Q))
-            continiousActionsOut[2] = -1.0f;
-        else if(Input.GetKey(KeyCode.E))
-            continiousActionsOut[2] = 1.0f;
-        else
-            continiousActionsOut[2] = 0.0f;
-*/
-        if(Input.GetKey(KeyCode.Alpha1))
+        if(Input.GetKey(KeyCode.Q)) rotationInput = -1.0f;
+        else if(Input.GetKey(KeyCode.E)) rotationInput = 1.0f;
+        else rotationInput = 0.0f;
+        ApplyRotation(rotationInput * Time.deltaTime);
+
+        if(Input.GetKey(KeyCode.C)){
             GrabInteractable();
-        if(!Input.GetKey(KeyCode.Alpha1) && IsHolding)
-            ReleaseInteractable();
+        }
+        //if(!Input.GetKey(KeyCode.C) && IsHolding) ReleaseInteractable();
+        
         else if(Input.GetKey(KeyCode.Alpha2))
             LockInteractable(true);
         else if(Input.GetKey(KeyCode.Alpha3))
@@ -131,30 +134,41 @@ public class HiderAgent : Agent
         return angle;
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         Movement();
-        movementInput = Vector2.zero;
-        rotationInput = 0f;
+        Rotation();
+        AdjustGrabbedObject();
+
+        Debug.Log(grabbedInteractable == null);
     }
+
 
 
     private void Movement()
     {
-        // Apply movement
-        Vector2 direction = movementInput.normalized;
-        Vector3 force = direction.x * transform.right + direction.y * transform.forward;
-        rigidbody.AddForce(force * runSpeed, ForceMode.Impulse);
+        movementInput = Vector2.Lerp(movementInput, Vector2.zero, Time.fixedDeltaTime * 5f);
+        Vector3 direction = new Vector3(movementInput.x, 0, movementInput.y).normalized;
+        Vector3 moveDirection = transform.right * direction.x + transform.forward * direction.z;
 
-        // Additional movement drag
-        Vector3 currentVel = new Vector3(rigidbody.linearVelocity.x, Mathf.Max(0f, rigidbody.linearVelocity.y), rigidbody.linearVelocity.z);
-        Vector3 dragForce = -currentVel * drag;
-        rigidbody.AddForce(dragForce, ForceMode.Impulse);
+        characterController.SimpleMove(moveDirection * moveSpeed);
+    }
 
-        float delta = rotationInput * rotationSpeed * Time.fixedDeltaTime;
-        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.AngleAxis(delta, Vector3.up));
+    private void Rotation()
+    {
+        // Calculate the target rotation angle in degrees
+        float targetAngle = transform.eulerAngles.y + rotationInput * rotationSpeed * Time.fixedDeltaTime;
 
-        // Adjust grabbed object position / rotation
+        // Smoothly adjust the angle using SmoothDampAngle
+        float smoothedAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref currentRotationVelocity, 0.1f);
+
+        // Apply the smoothed rotation
+        transform.rotation = Quaternion.Euler(0f, smoothedAngle, 0f);
+    
+    }
+
+    private void AdjustGrabbedObject()
+    {
         if (grabbedInteractable != null)
         {
             // Adjust position
@@ -201,16 +215,17 @@ public class HiderAgent : Agent
 
     public void GrabInteractable()
     {
-        Debug.Log("grab");
         if (grabbedInteractable == null)
         {
             if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
             {
                 if (hit.distance < grabDistance && IsInteractable(hit.collider))
                 {
+
                     Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
                     if (interactable.TryGrab(this))
                     {
+
                         grabbedInteractable = interactable;
                         // Keep rotation of the object relative to the agent
                         targetRelativeRotation = Quaternion.Inverse(transform.rotation) * grabbedInteractable.transform.rotation;
@@ -222,7 +237,6 @@ public class HiderAgent : Agent
 
     public void ReleaseInteractable()
     {
-        Debug.Log("release");
         if (grabbedInteractable != null)
         {
             grabbedInteractable.Release();
@@ -232,13 +246,10 @@ public class HiderAgent : Agent
 
     public void LockInteractable(bool tryLock)
     {
-        if(tryLock)Debug.Log("Lock");
-        else Debug.Log("Unlock");
         if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
         {
             if (hit.distance < grabDistance && IsInteractable(hit.collider))
             {
-                Debug.Log("hit interactable");
                 Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
                 interactable.TryLockUnlock(this, tryLock);
             }
@@ -248,8 +259,6 @@ public class HiderAgent : Agent
 
     public void ResetAgent()
     {
-        rigidbody.linearVelocity = Vector3.zero;
-        rigidbody.angularVelocity = Vector3.zero;
         grabbedInteractable = null;
         gameObject.SetActive(true);
     }

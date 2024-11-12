@@ -70,6 +70,7 @@ public class Interactable : MonoBehaviour
             return false;
         }
         owner = agent;
+        Debug.Log(true);
         return true;
     }
 

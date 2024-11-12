@@ -18,6 +18,13 @@ public class HiderAgent : Agent
     [Header("Interacting")]
     [SerializeField] private float grabDistance = 2f;
     [SerializeField] private float holdBreakDistance = 4f;
+    [SerializeField] private float grabOffset = 2f;  
+    [SerializeField] private float positionVelocityFactor = 10f;      // Stärke der Kraft, die das Objekt in Position hält
+    [SerializeField] private float rotationVelocityFactor = 2f;       // Stärke des Drehmoments, das das Objekt in Rotation hält
+    [SerializeField] private float positionTolerance = 0.1f;    // Toleranz für Position
+    [SerializeField] private float rotationTolerance = 1f;      // Toleranz für Rotation in Grad
+
+      
 
     private Vector2 movementInput = Vector2.zero;
     private float rotationInput = 0f;
@@ -40,10 +47,12 @@ public class HiderAgent : Agent
         {
             GrabInteractable();
         }
-        else if (IsHolding)
+        
+        else if (actions.DiscreteActions[0] == 2 && IsHolding)
         {
             ReleaseInteractable();
         }
+        
 
         if (actions.DiscreteActions[1] == 1)
         {
@@ -117,7 +126,7 @@ public class HiderAgent : Agent
         if(Input.GetKey(KeyCode.C)){
             GrabInteractable();
         }
-        //if(!Input.GetKey(KeyCode.C) && IsHolding) ReleaseInteractable();
+        if(!Input.GetKey(KeyCode.C) && IsHolding) ReleaseInteractable();
         
         else if(Input.GetKey(KeyCode.Alpha2))
             LockInteractable(true);
@@ -139,8 +148,6 @@ public class HiderAgent : Agent
         Movement();
         Rotation();
         AdjustGrabbedObject();
-
-        Debug.Log(grabbedInteractable == null);
     }
 
 
@@ -171,17 +178,37 @@ public class HiderAgent : Agent
     {
         if (grabbedInteractable != null)
         {
-            // Adjust position
-            Vector3 targetPosition = transform.position + transform.forward * grabDistance;
-            Vector3 towards = targetPosition - grabbedInteractable.Rigidbody.position;
-            grabbedInteractable.Rigidbody.linearVelocity = towards * 10f;
+            // Zielposition und -rotation berechnen
+            Vector3 targetPosition = transform.position + transform.forward * grabOffset;
+            targetPosition.y = grabbedInteractable.Rigidbody.position.y; // Behalte Y-Position bei
 
-            // Adjust rotation
             Quaternion targetRotation = transform.rotation * targetRelativeRotation;
-            Vector3 angularTowards = ShortestPathFromTo(grabbedInteractable.transform.rotation, targetRotation);
-            grabbedInteractable.Rigidbody.angularVelocity = angularTowards * 0.1f;
 
-            // Break in case the object is too far from holder
+            // Abstand zur Zielposition und Differenz zur Zielrotation berechnen
+            Vector3 positionDelta = targetPosition - grabbedInteractable.Rigidbody.position;
+            Vector3 angularDelta = ShortestPathFromTo(grabbedInteractable.Rigidbody.rotation, targetRotation);
+
+            // Setze velocity nur, wenn das Objekt außerhalb der Positionstoleranz ist
+            if (positionDelta.magnitude > positionTolerance)
+            {
+                grabbedInteractable.Rigidbody.linearVelocity = positionDelta.normalized * positionVelocityFactor;
+            }
+            else
+            {
+                grabbedInteractable.Rigidbody.linearVelocity = Vector3.zero; // Stoppe das Objekt, wenn es in Position ist
+            }
+
+            // Setze angularVelocity nur, wenn die Rotation außerhalb der Toleranz ist
+            if (angularDelta.magnitude > rotationTolerance)
+            {
+                grabbedInteractable.Rigidbody.angularVelocity = angularDelta.normalized * rotationVelocityFactor;
+            }
+            else
+            {
+                grabbedInteractable.Rigidbody.angularVelocity = Vector3.zero; // Stoppe die Rotation, wenn sie im Ziel ist
+            }
+
+            // Griff lösen, falls das Objekt zu weit entfernt ist
             if (Vector3.Distance(grabbedInteractable.Rigidbody.position, transform.position) > holdBreakDistance)
             {
                 grabbedInteractable.Release();
@@ -221,8 +248,8 @@ public class HiderAgent : Agent
             {
                 if (hit.distance < grabDistance && IsInteractable(hit.collider))
                 {
-
                     Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
+                    Debug.Log(interactable);
                     if (interactable.TryGrab(this))
                     {
 

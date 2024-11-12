@@ -140,8 +140,13 @@ MonoBehaviour:
   characterController: {fileID: 756285357544503101}
   moveSpeed: 5
   rotationSpeed: 1000
-  grabDistance: 1.5
+  grabDistance: 2.5
   holdBreakDistance: 4
+  grabOffset: 2.5
+  positionVelocityFactor: 20
+  rotationVelocityFactor: 7
+  positionTolerance: 0.2
+  rotationTolerance: 0.5
 --- !u!114 &6433088729424045256
 MonoBehaviour:
   m_ObjectHideFlags: 0

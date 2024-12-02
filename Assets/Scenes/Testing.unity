@@ -391,7 +391,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: episodeSteps
-      value: 19999
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: winCondition
@@ -399,26 +399,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: rewards.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2288620831828099929, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: hiderPrefab
-      value: 
-      objectReference: {fileID: 7743676093840856332, guid: d70584e9a8064c1459f0d69689c5730f, type: 3}
-    - target: {fileID: 2288620831828099929, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: numBoxesMax
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2288620831828099929, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: numBoxesMin
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2288620831828099929, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: numRampsMax
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2288620831828099929, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: numRampsMin
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawIndividualReward
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: rewards.Array.data[0].type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: rewards.Array.data[0].weight
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2288620831828099929, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
@@ -435,10 +427,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2288620831828099929, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: numSeekersMin
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2288620831828099929, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: instantiateInteractables
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2518838290219750159, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}

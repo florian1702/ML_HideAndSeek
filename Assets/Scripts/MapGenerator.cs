@@ -17,8 +17,8 @@ public class MapGenerator : MonoBehaviour
     [Header("Agent placement")]
     // instantiateAgents must be on if agent count should be randomized every episode
     [SerializeField] private Transform agentParent = null;
-    [SerializeField] private  HiderAgent hiderPrefab = null;
-    [SerializeField] private SeekerAgent seekerPrefab = null;
+    [SerializeField] private  AgentActions hiderPrefab = null;
+    [SerializeField] private AgentActions seekerPrefab = null;
     [SerializeField] private int numHidersMin = 3;
     [SerializeField] private int numHidersMax = 3;
     [SerializeField] private int numSeekersMin = 3;
@@ -51,8 +51,8 @@ public class MapGenerator : MonoBehaviour
 
     private List<GameObject> generatedWalls = null;
 
-    private HiderAgent[] hiders = null;
-    private SeekerAgent[] seekers = null;
+    private AgentActions[] hiders = null;
+    private AgentActions[] seekers = null;
     private Box[] boxes = null;
     private Ramp[] ramps = null;
 
@@ -60,8 +60,8 @@ public class MapGenerator : MonoBehaviour
     public int NumSeekers { get; private set; } = 0;
     public int NumBoxes { get; private set; } = 0;
     public int NumRamps { get; private set; } = 0;
-    public List<HiderAgent> GetInstantiatedHiders() => hiders.ToList();
-    public List<SeekerAgent> GetInstantiatedSeekers() => seekers.ToList();
+    public List<AgentActions> GetInstantiatedHiders() => hiders.ToList();
+    public List<AgentActions> GetInstantiatedSeekers() => seekers.ToList();
 
     public void Initialize()
     {
@@ -106,7 +106,7 @@ public class MapGenerator : MonoBehaviour
     {
         float size = wallsPosition == 0f ? mapSize : wallsPosition;
 
-        floorGameObject.transform.localScale = new Vector3(size, size, 1);
+        floorGameObject.transform.localScale = new Vector3(size * 0.1f, 1f, size * 0.1f);
         float sx = size;
         float sz = wallThickness;
         Vector3 pos = new Vector3(0f, wallY, size * 0.5f);

@@ -12,4 +12,4 @@ mlagents-learn --help				to check if everything is correct
 pip install protobuf==3.20.3			most likely you have to install protobuf too
 tensorboard --logdir results  			to see visualization of the result on http://localhost:6006/
 
-mlagents-learn --force --run-id=Test1		run training
+mlagents-learn TrainerConfig/HideAndSeek.yaml --force --run-id=Test1		run training

@@ -29,27 +29,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float winConditionRewardMultiplier = 1.0f;
     [SerializeField] private float arenaSize = 20f;
 
-    [Header("Coplay")]
-    [SerializeField] private bool useCoplay = false;
-    [SerializeField] private int numberOfCoplayAgents = 1;
-    [SerializeField] private float selfPlayRatio = 0.5f;
-
     [Header("Debug")]
     [SerializeField] private bool debugDrawBoxHold = true;
     [SerializeField] private bool debugDrawVisibility = true;
     [SerializeField] private bool debugDrawIndividualReward = true;
     [SerializeField] private bool debugDrawPlayAreaBounds = true;
 
-
-
     private int episodeTimer = 0;
-    private List<HiderAgent> hiders;
-    private List<SeekerAgent> seekers;
-    private List<HiderAgent> hiderInstances;
-    private List<SeekerAgent> seekerInstances;
+    private List<AgentActions> hiders;
+    private List<AgentActions> seekers;
+    private List<AgentActions> hiderInstances;
+    private List<AgentActions> seekerInstances;
     private SimpleMultiAgentGroup hidersGroup;
     private SimpleMultiAgentGroup seekersGroup;
-    private List<Interactable> interactableObjects;
 
     private bool[,] visibilityMatrix;
     private bool[] visibilityHiders;
@@ -79,8 +71,6 @@ public class GameManager : MonoBehaviour
         hidersGroup = new SimpleMultiAgentGroup();
         seekersGroup = new SimpleMultiAgentGroup();
 
-        //interactableObjects = FindObjectsByType<Interactable>(FindObjectsSortMode.None).ToList();
-
         statsRecorder = Academy.Instance.StatsRecorder;
 
         ResetScene();
@@ -99,7 +89,7 @@ public class GameManager : MonoBehaviour
         episodeTimer++;
 
         Vector3 seekersMeanPosition = Vector3.zero;
-        foreach (SeekerAgent seeker in seekers)
+        foreach (AgentActions seeker in seekers)
         {
             seekersMeanPosition += seeker.transform.position - transform.position;
         }
@@ -108,7 +98,7 @@ public class GameManager : MonoBehaviour
         statsRecorder.Add("Environment/SeekersMeanZ", seekersMeanPosition.z);
 
         Vector3 hidersMeanPosition = Vector3.zero;
-        foreach (HiderAgent hider in hiders)
+        foreach (AgentActions hider in hiders)
         {
             hidersMeanPosition += hider.transform.position - transform.position;
         }
@@ -133,23 +123,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
-    public IEnumerable<HiderAgent> GetHiders()
+    public IEnumerable<AgentActions> GetHiders()
     {
-        foreach(HiderAgent agent in hiders)
+        foreach(AgentActions agent in hiders)
         {
             yield return agent;
         }
     }
 
-    public IEnumerable<SeekerAgent> GetSeekers()
+    public IEnumerable<AgentActions> GetSeekers()
     {
-        foreach(SeekerAgent agent in seekers)
+        foreach(AgentActions agent in seekers)
         {
             yield return agent;
         }
     }
-
 
     private void EndEpisode()
     {
@@ -181,28 +169,18 @@ public class GameManager : MonoBehaviour
         hidersPerfectGame = true;
         episodeTimer = 0;
 
-        /*
-        if (!mapGenerator.InstantiatesInteractables())
-        {
-            foreach (Interactable interactable in interactableObjects)
-            {
-                interactable.Reset();
-            }
-        }
-        */
-
         mapGenerator.Generate();
         hiders = hiderInstances.Take(mapGenerator.NumHiders).ToList();
         seekers = seekerInstances.Take(mapGenerator.NumSeekers).ToList();
-        foreach (HiderAgent hider in hiders)
+        foreach (AgentActions hider in hiders)
         {
             hider.ResetAgent();
-            hidersGroup.RegisterAgent(hider);
+            hidersGroup.RegisterAgent(hider.HideAndSeekAgent);
         }
-        foreach (SeekerAgent seeker in seekers)
+        foreach (AgentActions seeker in seekers)
         {
             seeker.ResetAgent();
-            seekersGroup.RegisterAgent(seeker);
+            seekersGroup.RegisterAgent(seeker.HideAndSeekAgent);
         }
 
         for (int i = 0; i < hiderInstances.Count; i++)
@@ -221,7 +199,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private bool AgentSeesAgent(Agent agent1, Agent agent2, out RaycastHit hit)
+    private bool AgentSeesAgent(AgentActions agent1, AgentActions agent2, out RaycastHit hit)
     {
         Vector3 direction = agent2.transform.position - agent1.transform.position;
         if (Vector3.Angle(direction, agent1.transform.forward) > coneAngle)
@@ -281,37 +259,37 @@ public class GameManager : MonoBehaviour
                     for (int i = 0; i < hiders.Count(); i++)
                     {
                         float reward = visibilityHiders[i] ? -rewardInfo.weight : rewardInfo.weight;
-                        hiders[i].AddReward(reward);
+                        hiders[i].HideAndSeekAgent.AddReward(reward);
                     }
                     for (int i = 0; i < seekers.Count(); i++)
                     {
                         float reward = visibilitySeekers[i] ? rewardInfo.weight : -rewardInfo.weight;
-                        seekers[i].AddReward(reward);
+                        seekers[i].HideAndSeekAgent.AddReward(reward);
                     }
                     break;
 
                 case RewardInfo.Type.VisibilityTeam:
                     if (!PreparationPhaseEnded) break;
                     float teamReward = allHidden ? rewardInfo.weight : -rewardInfo.weight;
-                    hiders.ForEach((HiderAgent hider) => hider.AddReward(teamReward));
-                    seekers.ForEach((SeekerAgent seeker) => seeker.AddReward(-teamReward));
+                    hiders.ForEach((AgentActions hider) => hider.HideAndSeekAgent.AddReward(teamReward));
+                    seekers.ForEach((AgentActions seeker) => seeker.HideAndSeekAgent.AddReward(-teamReward));
                     break;
 
                 case RewardInfo.Type.OobPenalty:
-                    foreach (HiderAgent hider in hiders.Where((HiderAgent agent) => IsOoB(agent)))
+                    foreach (AgentActions hider in hiders.Where((AgentActions agent) => IsOoB(agent)))
                     {
-                        hider.AddReward(-rewardInfo.weight);
+                        hider.HideAndSeekAgent.AddReward(-rewardInfo.weight);
                     }
-                    foreach (SeekerAgent seeker in seekers.Where((SeekerAgent agent) => IsOoB(agent)))
+                    foreach (AgentActions seeker in seekers.Where((AgentActions agent) => IsOoB(agent)))
                     {
-                        seeker.AddReward(-rewardInfo.weight);
+                        seeker.HideAndSeekAgent.AddReward(-rewardInfo.weight);
                     }
                     break;
             }
         }
     }
 
-    private bool IsOoB(Agent agent)
+    private bool IsOoB(AgentActions agent)
     {
         return Mathf.Max(Mathf.Abs(agent.transform.position.x - transform.position.x),
                          Mathf.Abs(agent.transform.position.z - transform.position.z)) > arenaSize * 0.5f;

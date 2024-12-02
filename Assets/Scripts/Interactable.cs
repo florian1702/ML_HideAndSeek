@@ -18,15 +18,15 @@ public class Interactable : MonoBehaviour
 
     private MeshRenderer meshRenderer = null;
 
-    private Agent owner = null;
-    private Agent lockOwner = null;
+    private AgentActions owner = null;
+    private AgentActions lockOwner = null;
 
     private Vector3 startPosition;
     private Quaternion startRotation;
 
 
-    public Agent Owner { get { return owner; } }
-    public Agent LockOwner { get { return lockOwner; } }
+    public AgentActions Owner { get { return owner; } }
+    public AgentActions LockOwner { get { return lockOwner; } }
     public Rigidbody Rigidbody { get { return rigidbody; } }
 
     void Start()
@@ -37,23 +37,23 @@ public class Interactable : MonoBehaviour
         
     }
 
-    public void TryLockUnlock(Agent agent, bool tryLock)
+    public void TryLockUnlock(AgentActions agent, bool tryLock)
     {
         if (tryLock)
         {
-            if (lockOwner == null && (owner == null || agent.GetType() == lockOwner.GetType()))
+            if (lockOwner == null && (owner == null || owner.IsHider == agent.IsHider))
             {
                 rigidbody.isKinematic = true;
-                //owner?.ReleaseBox();
+                owner?.ReleaseInteractable();
                 owner = null;
                 lockOwner = agent;
-                meshRenderer.material = agent.GetType() == typeof(HiderAgent) ? materialLockHider : materialLockSeeker;
-                tag = agent.GetType() == typeof(HiderAgent) ? tagLockHider : tagLockSeeker;
+                meshRenderer.material = agent.IsHider ? materialLockHider : materialLockSeeker;
+                tag = agent.IsHider ? tagLockHider : tagLockSeeker;
             }
         }
         else
         {
-            if (lockOwner != null && agent.GetType() == lockOwner.GetType())
+            if (lockOwner != null && lockOwner.IsHider == agent.IsHider)
             {
                 rigidbody.isKinematic = false;
                 lockOwner = null;
@@ -63,7 +63,7 @@ public class Interactable : MonoBehaviour
         }
     }
 
-    public bool TryGrab(Agent agent)
+    public bool TryGrab(AgentActions agent)
     {
         if(lockOwner != null || owner != null)
         {

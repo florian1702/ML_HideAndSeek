@@ -8,8 +8,8 @@ using UnityEngine.UIElements;
 public class Interactable : MonoBehaviour
 {
 
-    [SerializeField] private new Rigidbody rigidbody = null;
-
+    [SerializeField] private  Rigidbody rb = null;
+    [SerializeField] private  bool lockable = true;
     [SerializeField] private Material materialDefault = null;
     [SerializeField] private Material materialLockHider = null;
     [SerializeField] private Material materialLockSeeker = null;
@@ -29,7 +29,7 @@ public class Interactable : MonoBehaviour
 
     public AgentActions Owner { get { return owner; } }
     public AgentActions LockOwner { get { return lockOwner; } }
-    public Rigidbody Rigidbody { get { return rigidbody; } }
+    public Rigidbody Rigidbody { get { return rb; } }
 
     void Start()
     {
@@ -41,26 +41,28 @@ public class Interactable : MonoBehaviour
 
     public void TryLockUnlock(AgentActions agent, bool tryLock)
     {
-        if (tryLock)
-        {
-            if (lockOwner == null && (owner == null || owner.IsHider == agent.IsHider))
+        if(lockable){
+            if (tryLock)
             {
-                rigidbody.isKinematic = true;
-                owner?.ReleaseInteractable();
-                owner = null;
-                lockOwner = agent;
-                meshRenderer.material = agent.IsHider ? materialLockHider : materialLockSeeker;
-                tag = agent.IsHider ? tagLockHider : tagLockSeeker;
+                if (lockOwner == null && (owner == null || owner.IsHider == agent.IsHider))
+                {
+                    rb.isKinematic = true;
+                    owner?.ReleaseInteractable();
+                    owner = null;
+                    lockOwner = agent;
+                    meshRenderer.material = agent.IsHider ? materialLockHider : materialLockSeeker;
+                    tag = agent.IsHider ? tagLockHider : tagLockSeeker;
+                }
             }
-        }
-        else
-        {
-            if (lockOwner != null && lockOwner.IsHider == agent.IsHider)
+            else
             {
-                rigidbody.isKinematic = false;
-                lockOwner = null;
-                meshRenderer.material = materialDefault;
-                tag = tagDefault;
+                if (lockOwner != null && lockOwner.IsHider == agent.IsHider)
+                {
+                    rb.isKinematic = false;
+                    lockOwner = null;
+                    meshRenderer.material = materialDefault;
+                    tag = tagDefault;
+                }
             }
         }
     }
@@ -72,13 +74,13 @@ public class Interactable : MonoBehaviour
             return false;
         }
         owner = agent;
-        rigidbody.isKinematic = false;
+        rb.isKinematic = false;
         return true;
     }
 
     public void Release()
     {
-        rigidbody.isKinematic = true;
+        rb.isKinematic = true;
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
         transform.position = new Vector3(transform.position.x, startPosition.y, transform.position.z);
         owner = null;
@@ -89,11 +91,11 @@ public class Interactable : MonoBehaviour
         owner = null;
         lockOwner = null;
         tag = tagDefault;
-        rigidbody.isKinematic = true;
+        rb.isKinematic = true;
         meshRenderer.material = materialDefault;
         transform.position = startPosition;
         transform.rotation = startRotation;
-        rigidbody.linearVelocity = Vector3.zero;
-        rigidbody.angularVelocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 }

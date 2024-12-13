@@ -6,17 +6,16 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
     [SerializeField] private int episodeSteps = 240;
     [SerializeField] private float preparationPhaseFraction = 0.4f;
-    [SerializeField] private float coneAngle = 0.375f * 180f;
+    [SerializeField] private float coneAngle = 67.5f;
     [SerializeField] private MapGenerator mapGenerator = null;
 
 
     [Serializable]
     public struct RewardInfo
     {
-        public enum Type { VisibilityIndividual, VisibilityTeam, OobPenalty };
+        public enum Type { VisibilityTeam, OobPenalty };
         public Type type;
         public float weight;
     };
@@ -26,7 +25,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Rules")]
     [SerializeField] private List<RewardInfo> rewards = null;
     [SerializeField] private WinCondition winCondition = WinCondition.None;
-    [SerializeField] private float winConditionRewardMultiplier = 1.0f;
+    [SerializeField] private float winConditionReward = 1.0f;
     [SerializeField] private float arenaSize = 20f;
 
     [Header("Debug")]
@@ -34,6 +33,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool debugDrawVisibility = true;
     [SerializeField] private bool debugDrawIndividualReward = true;
     [SerializeField] private bool debugDrawPlayAreaBounds = true;
+    [SerializeField] private bool debugLogMatchResult = true;
 
     private int episodeTimer = 0;
     private List<AgentActions> hiders;
@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     private List<AgentActions> seekerInstances;
     private SimpleMultiAgentGroup hidersGroup;
     private SimpleMultiAgentGroup seekersGroup;
+    private List<Interactable> interactables;
 
     private bool[,] visibilityMatrix;
     private bool[] visibilityHiders;
@@ -63,6 +64,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         mapGenerator.Initialize();
+
         hiderInstances = mapGenerator.GetInstantiatedHiders();
         seekerInstances = mapGenerator.GetInstantiatedSeekers();
         hiderInstances.ForEach(hider => hider.GameManager = this);
@@ -71,8 +73,9 @@ public class GameManager : MonoBehaviour
         hidersGroup = new SimpleMultiAgentGroup();
         seekersGroup = new SimpleMultiAgentGroup();
 
-        statsRecorder = Academy.Instance.StatsRecorder;
+        interactables = FindObjectsByType<Interactable>(0).ToList();
 
+        statsRecorder = Academy.Instance.StatsRecorder;
         ResetScene();
     }
 
@@ -153,9 +156,14 @@ public class GameManager : MonoBehaviour
             }
 
 
-            hidersGroup.AddGroupReward(hidersWon ? winConditionRewardMultiplier : -winConditionRewardMultiplier);
-            seekersGroup.AddGroupReward(hidersWon ? -winConditionRewardMultiplier : winConditionRewardMultiplier);
+            hidersGroup.AddGroupReward(hidersWon ? winConditionReward : -winConditionReward);
+            seekersGroup.AddGroupReward(hidersWon ? -winConditionReward : winConditionReward);
             statsRecorder.Add("Environment/HiderWinRatio", hidersWon ? 1 : 0);
+        
+            if (debugLogMatchResult)
+            {
+                Debug.LogFormat("Team {0} won; Time percentage hidden - {1}", hidersWon ? "hiders" : "seekers", timeHidden * 100f);
+            }
         }
 
         hidersGroup.EndGroupEpisode();
@@ -169,7 +177,16 @@ public class GameManager : MonoBehaviour
         hidersPerfectGame = true;
         episodeTimer = 0;
 
+        if (!mapGenerator.InstantiatesInteractables())
+        {
+            foreach (Interactable interactable in interactables)
+            {
+                interactable.Reset();
+            }
+        }
+
         mapGenerator.Generate();
+
         hiders = hiderInstances.Take(mapGenerator.NumHiders).ToList();
         seekers = seekerInstances.Take(mapGenerator.NumSeekers).ToList();
         foreach (AgentActions hider in hiders)
@@ -235,10 +252,6 @@ public class GameManager : MonoBehaviour
                     visibilityHiders[i] = true;
                     visibilitySeekers[j] = true;
                     allHidden = false;
-                    if (debugDrawVisibility)
-                    {
-                        Debug.DrawLine(seekers[j].transform.position, hit.point, Color.red);
-                    }
                 }
                 else
                 {
@@ -254,20 +267,6 @@ public class GameManager : MonoBehaviour
         {
             switch (rewardInfo.type)
             {
-                case RewardInfo.Type.VisibilityIndividual:
-                    if (!PreparationPhaseEnded) break;
-                    for (int i = 0; i < hiders.Count(); i++)
-                    {
-                        float reward = visibilityHiders[i] ? -rewardInfo.weight : rewardInfo.weight;
-                        hiders[i].HideAndSeekAgent.AddReward(reward);
-                    }
-                    for (int i = 0; i < seekers.Count(); i++)
-                    {
-                        float reward = visibilitySeekers[i] ? rewardInfo.weight : -rewardInfo.weight;
-                        seekers[i].HideAndSeekAgent.AddReward(reward);
-                    }
-                    break;
-
                 case RewardInfo.Type.VisibilityTeam:
                     if (!PreparationPhaseEnded) break;
                     float teamReward = allHidden ? rewardInfo.weight : -rewardInfo.weight;
@@ -298,16 +297,68 @@ public class GameManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        if (debugDrawVisibility)
+        {
+            if(seekers != null){
+                foreach (var agent in seekers){
+                    DrawFieldOfView(agent);
+                }
+            }
+        }
+
+        // Bestehender Code zur Darstellung der Arena-Bounds
         if (debugDrawPlayAreaBounds)
         {
             Vector3 center = transform.position;
             Color c = Gizmos.color;
-            Gizmos.color = new Color(1f, 0.2f, 0.4f, 0.6f);
+            Gizmos.color = new Color(0.3f, 1f, 0.3f, 0.5f);
             Gizmos.DrawCube(center + new Vector3(-arenaSize * 0.5f, 1f, 0f), new Vector3(0.25f, 2f, arenaSize));
             Gizmos.DrawCube(center + new Vector3(+arenaSize * 0.5f, 1f, 0f), new Vector3(0.25f, 2f, arenaSize));
             Gizmos.DrawCube(center + new Vector3(0f, 1f, -arenaSize * 0.5f), new Vector3(arenaSize, 2f, 0.25f));
             Gizmos.DrawCube(center + new Vector3(0f, 1f, +arenaSize * 0.5f), new Vector3(arenaSize, 2f, 0.25f));
             Gizmos.color = c;
+        }
+    }
+
+    /// <summary>
+    /// Zeichnet das Sichtfeld (FoV) eines Agents.
+    /// </summary>
+    /// <param name="agent">Agent, dessen Sichtfeld dargestellt wird.</param>
+    private void DrawFieldOfView(AgentActions agent)
+    {
+        if (agent == null || !seekers.Contains(agent)) return;
+
+        // Agent's position and forward direction
+        Vector3 position = agent.transform.position;
+        Vector3 forward = agent.transform.forward;
+
+        // Total field of view angle and radius
+        float totalFovAngle = coneAngle * 2f; // Full field of view (double the half-angle)
+
+        // Color for the field of view
+        Color fovColor = Color.yellow;
+
+        // Draw field of view boundaries with obstacle checks
+        Gizmos.color = fovColor;
+
+        // Number of steps to divide the field of view
+        int numSteps = 20; // More steps = smoother visualization
+        float angleStep = totalFovAngle / numSteps;
+
+        for (int i = 0; i <= numSteps; i++)
+        {
+            // Calculate angle for the current step
+            float angle = -coneAngle + i * angleStep;
+
+            // Direction of the current ray
+            Vector3 rayDirection = Quaternion.Euler(0, angle, 0) * forward;
+
+            // Perform a raycast to check for obstacles
+            if (Physics.Raycast(position, rayDirection, out RaycastHit hit))
+            {
+                // Draw a line to the obstacle
+                Gizmos.DrawLine(position, hit.point);
+            }
         }
     }
 }

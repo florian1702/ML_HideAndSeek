@@ -1,7 +1,9 @@
 using System;
 using System.Buffers;
+using JetBrains.Annotations;
 using Unity.MLAgents;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Interactable : MonoBehaviour
 {
@@ -70,12 +72,15 @@ public class Interactable : MonoBehaviour
             return false;
         }
         owner = agent;
-        Debug.Log(true);
+        rigidbody.isKinematic = false;
         return true;
     }
 
     public void Release()
     {
+        rigidbody.isKinematic = true;
+        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
+        transform.position = new Vector3(transform.position.x, startPosition.y, transform.position.z);
         owner = null;
     }
 
@@ -84,7 +89,7 @@ public class Interactable : MonoBehaviour
         owner = null;
         lockOwner = null;
         tag = tagDefault;
-        rigidbody.isKinematic = false;
+        rigidbody.isKinematic = true;
         meshRenderer.material = materialDefault;
         transform.position = startPosition;
         transform.rotation = startRotation;

@@ -29,7 +29,6 @@ public class MapGenerator : MonoBehaviour
     [Header("Object placement")]
     // instantiateBoxes must be on if box count should be randomized every episode
     [SerializeField] private bool instantiateInteractables = true;
-    [SerializeField] private Transform interactableParent = null;
     [SerializeField] private Box boxPrefab = null;
     [SerializeField] private Ramp rampPrefab = null;
     [SerializeField] private int numBoxesMin = 2;
@@ -37,7 +36,7 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int numRampsMin = 1;
     [SerializeField] private int numRampsMax = 1;
     [SerializeField] private float boxY = 1.0f;
-    [SerializeField] private float rampY = 0.0f;
+    [SerializeField] private float rampY = 1.0f;
     [SerializeField] private float objectRadius = 2.5f;
 
     [Header("Subroom generation")]
@@ -46,8 +45,8 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private float doorWidth = 2.5f;
 
     private const int numTriesAgent = 50;
-    private const int numTriesBox = 20;
-    private const int numTriesRamp = 20;
+    private const int numTriesBox = 25;
+    private const int numTriesRamp = 25;
 
     private List<GameObject> generatedWalls = null;
 
@@ -67,6 +66,12 @@ public class MapGenerator : MonoBehaviour
     {
         hiders = Enumerable.Range(0, numHidersMax).Select(_ => Instantiate(hiderPrefab, agentParent)).ToArray();
         seekers = Enumerable.Range(0, numSeekersMax).Select(_ => Instantiate(seekerPrefab, agentParent)).ToArray();
+
+        if (!instantiateInteractables)
+        {
+            boxes = FindObjectsByType<Box>(0);
+            ramps = FindObjectsByType<Ramp>(0);
+        }
     }
 
     public void Generate()
@@ -74,6 +79,9 @@ public class MapGenerator : MonoBehaviour
         // Destroy all Walls and create a new list
         generatedWalls?.ForEach((GameObject wall) => Destroy(wall));
         generatedWalls = new List<GameObject>();
+        
+        // Generate Mainroom
+        GenerateMainRoom();
         
         // Destroy all Interactables
         if (instantiateInteractables)
@@ -88,8 +96,6 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        // Generate Mainroom
-        GenerateMainRoom();
 
         // Generate Subroom
         if (generateSubroom)
@@ -236,7 +242,7 @@ public class MapGenerator : MonoBehaviour
                 int id = i + NumHiders + NumSeekers;
                 float x = itemPlacement[id].Item1.x;
                 float z = itemPlacement[id].Item1.y;
-                boxes[i] = Instantiate(boxPrefab, new Vector3(x, boxY, z) + transform.position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+                boxes[i] = Instantiate(boxPrefab, new Vector3(x, boxY, z) + transform.position, Quaternion.Euler(0f, 0f, 0f));
             }
 
             for (int i = 0; i < NumRamps; i++)
@@ -244,7 +250,7 @@ public class MapGenerator : MonoBehaviour
                 int id = i + NumHiders + NumSeekers + NumBoxes;
                 float x = itemPlacement[id].Item1.x;
                 float z = itemPlacement[id].Item1.y;
-                ramps[i] = Instantiate(rampPrefab, new Vector3(x, rampY, z) + transform.position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+                ramps[i] = Instantiate(rampPrefab, new Vector3(x, rampY, z) + transform.position, Quaternion.Euler(0f, 90f, 0f));
             }
         }
     }

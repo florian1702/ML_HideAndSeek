@@ -6,12 +6,54 @@ using System.Collections.Generic;
 
 public class HideAndSeekAgent : Agent
 {
+    [Header("Actions")]
     [SerializeField] private AgentActions agentActions = null;
-
 
     [Header("Sensors")]
     [SerializeField] private BufferSensorComponent teamBufferSensor = null;
-    [SerializeField] private RayPerceptionSensorComponent3D rayPerceptionSensors = null;
+
+    public override void OnEpisodeBegin()
+    {
+        transform.localPosition = new Vector3(Random.Range(-8,8), 0, Random.Range(-8,8));
+    }
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        Vector3 platformCenter = agentActions.GameManager.transform.position;
+
+        // SELF OBSERVATION - 8 Values
+        // Position (Relative to Platform) - 3 floats
+        sensor.AddObservation(transform.position - platformCenter);
+        // Rotation - 1 float
+        sensor.AddObservation(NormalizeAngle(transform.rotation.eulerAngles.y));
+        // Velocity - 3 floats
+        sensor.AddObservation(agentActions.Rigidbody.linearVelocity);
+        // Hider or Seeker - 1 bool
+        sensor.AddObservation(agentActions.IsHider);
+
+
+        // TEAM OBSERVATIONS - 7 Values
+        IEnumerable<AgentActions> teamAgents = agentActions.IsHider
+                                             ? agentActions.GameManager.GetHiders()
+                                             : agentActions.GameManager.GetSeekers();
+
+        foreach (AgentActions teamAgent in teamAgents)
+        {
+                float[] obs = new float[7];
+                Vector3 teamAgentPosition = teamAgent.transform.position - platformCenter;
+                // Position (Relative to Platform) - 3 floats
+                obs[0] = teamAgentPosition.x;
+                obs[1] = teamAgentPosition.y;
+                obs[2] = teamAgentPosition.z;
+                // Rotation - 1 float
+                obs[3] = NormalizeAngle(teamAgent.transform.rotation.eulerAngles.y);
+                // Velocity - 3 floats
+                obs[4] = teamAgent.Rigidbody.linearVelocity.x;
+                obs[5] = teamAgent.Rigidbody.linearVelocity.y;
+                obs[6] = teamAgent.Rigidbody.linearVelocity.z;
+
+                teamBufferSensor.AppendObservation(obs);
+        }
+    }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
@@ -32,7 +74,6 @@ public class HideAndSeekAgent : Agent
             agentActions.ReleaseInteractable();
         }
         
-
         if (actions.DiscreteActions[1] == 1)
         {
             agentActions.LockInteractable(true);
@@ -42,54 +83,10 @@ public class HideAndSeekAgent : Agent
             agentActions.LockInteractable(false);
         }
 
-        if (agentActions.GameManager.DebugDrawIndividualReward)
-        {
-            float reward = GetCumulativeReward();
-            Color rewardColor = Color.blue;
-            if (reward > 0f) rewardColor = Color.green;
-            if (reward < 0f) rewardColor = Color.red;
-            Debug.DrawRay(transform.position, 20f * Mathf.Abs(reward) * Vector3.up, rewardColor);
-        }
-    }
-
-    public override void CollectObservations(VectorSensor sensor)
-    {
-        Vector3 platformCenter = agentActions.GameManager.transform.position;
-
-        // self -- 7 floats
-        sensor.AddObservation(transform.position - platformCenter);
-        sensor.AddObservation(NormalizeAngle(transform.rotation.eulerAngles.y));
-        sensor.AddObservation(agentActions.Rigidbody.linearVelocity);
-        sensor.AddObservation(agentActions.IsHider);
-
-        IEnumerable<AgentActions> teamAgents = agentActions.IsHider
-                                             ? agentActions.GameManager.GetHiders()
-                                             : agentActions.GameManager.GetSeekers();
-
-        foreach (AgentActions teamAgent in teamAgents)
-        {
-                float[] obs = new float[8];
-                Vector3 teamAgentPosition = teamAgent.transform.position - platformCenter;
-                obs[0] = teamAgentPosition.x;
-                obs[1] = teamAgentPosition.y;
-                obs[2] = teamAgentPosition.z;
-                obs[3] = NormalizeAngle(teamAgent.transform.rotation.eulerAngles.y);
-                obs[4] = teamAgent.Rigidbody.linearVelocity.x;
-                obs[5] = teamAgent.Rigidbody.linearVelocity.y;
-                obs[6] = teamAgent.Rigidbody.linearVelocity.z;
-
-                teamBufferSensor.AppendObservation(obs);
-        }
-    }
-
-    public override void OnEpisodeBegin()
-    {
-        transform.localPosition = new Vector3(Random.Range(-8,8), 0, Random.Range(-8,8));
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-       
         Vector2 movementInput = Vector2.zero;
         float rotationInput = 0f;
 
@@ -121,5 +118,26 @@ public class HideAndSeekAgent : Agent
         angle *= Mathf.Deg2Rad;
         return angle;
     }
+
+    void OnDrawGizmos()
+    {
+        if (agentActions.GameManager.DebugDrawIndividualReward)
+        {
+            float reward = GetCumulativeReward();
+            Color rewardColor = Color.blue;
+
+            if (reward > 0f) 
+                rewardColor = Color.green;
+            if (reward < 0f) 
+                rewardColor = Color.red;
+
+            // Setze die Farbe für die Gizmos-Darstellung
+            Gizmos.color = rewardColor;
+
+            // Zeichne eine Sphäre an der Position des Objekts
+            Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), 0.5f);
+        }
+    }
+
 
 }

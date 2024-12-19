@@ -46,7 +46,7 @@ The seekers will enhance their detection skills while the hiders develop clever 
 
 - [x] Map Generation
 - [x] Interactables
-- [ ] Agent Behaviour
+- [x] Agent Behaviour
 - [ ] Training
 - [ ] Polishing (Animations, Sounds ...)
 

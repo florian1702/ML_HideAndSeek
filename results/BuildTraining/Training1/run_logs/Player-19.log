@@ -1,0 +1,34 @@
+Mono path[0] = 'D:/Projects/ML_HideAndSeek/Builds/ML_HideAndSeek_Data/Managed'
+Mono config path = 'D:/Projects/ML_HideAndSeek/Builds/MonoBleedingEdge/etc'
+[Physics::Module] Initialized fallback backend.
+[Physics::Module] Id: 0xdecafbad
+Initialize engine version: 6000.0.23f1 (1c4764c07fb4)
+[Subsystems] Discovering subsystems at path D:/Projects/ML_HideAndSeek/Builds/ML_HideAndSeek_Data/UnitySubsystems
+kGfxThreadingModeSplitJobs is not supported on Direct3D 11. Reverting to kGfxThreadingModeClientWorkerJobs instead.
+GfxDevice: creating device client; kGfxThreadingModeClientWorkerJobs
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 3060 Laptop GPU (ID=0x2520)
+    Vendor:   NVIDIA
+    VRAM:     5996 MB
+    Driver:   32.0.15.6636
+Begin MonoManager ReloadAssembly
+- Loaded All Assemblies, in  0.328 seconds
+- Finished resetting the current domain, in  0.007 seconds
+[Physics::Module] Selected backend.
+[Physics::Module] Name: PhysX
+[Physics::Module] Id: 0xf2b8ea05
+[Physics::Module] SDK Version: 4.1.2
+[Physics::Module] Integration Version: 1.0.0
+[Physics::Module] Threading Mode: Multi-Threaded
+<RI> Initializing input.
+New input system (experimental) initialized
+Using Windows.Gaming.Input
+<RI> Input initialized.
+<RI> Initialized touch support.
+UnloadTime: 0.651100 ms
+Registered Communicator in Agent.
+RenderGraph is now enabled.
+Unable to save timers to file D:/Projects/ML_HideAndSeek/Builds/ML_HideAndSeek_Data\ML-Agents\Timers\Training_timers.json
+[Physics::Module] Cleanup current backned.
+[Physics::Module] Id: 0xf2b8ea05

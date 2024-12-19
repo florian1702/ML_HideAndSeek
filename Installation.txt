@@ -7,9 +7,11 @@ py -m venv venv					to create a virtual enviorment
 venv\Scripts\activate				run activate script to run the virtual env.
 py -m pip install --upgrade pip			to install python installer for the venv 
 pip install mlagents				to install the Unity mlagents library for the venv
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 pip install torch torchvision torchaudio	to install the pytorch library for the venv
 mlagents-learn --help				to check if everything is correct
 pip install protobuf==3.20.3			most likely you have to install protobuf too
 tensorboard --logdir results  			to see visualization of the result on http://localhost:6006/
 
-mlagents-learn TrainerConfig/HideAndSeek.yaml --force --run-id=Test1		run training
+mlagents-learn TrainerConfig/HideAndSeek.yaml --force --run-id=Test1		run tr
+mlagents-learn TrainerConfig/HideAndSeek.yaml --num-envs=8 --env=Builds/ML_HideAndSeek.exe --force --run-id=BuildTraining/Training1		

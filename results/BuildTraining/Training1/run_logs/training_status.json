@@ -1,0 +1,93 @@
+{
+    "HideAndSeek": {
+        "checkpoints": [
+            {
+                "steps": 499942,
+                "file_path": "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-499942.onnx",
+                "reward": 160.51063829787233,
+                "creation_time": 1734613136.2985547,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-499942.pt"
+                ]
+            },
+            {
+                "steps": 999952,
+                "file_path": "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-999952.onnx",
+                "reward": 162.97029702970298,
+                "creation_time": 1734616485.6553526,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-999952.pt"
+                ]
+            },
+            {
+                "steps": 1158435,
+                "file_path": "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1158435.onnx",
+                "reward": -6.0606060606060606,
+                "creation_time": 1734617549.5790815,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1158435.pt"
+                ]
+            },
+            {
+                "steps": 1187483,
+                "file_path": "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1187483.onnx",
+                "reward": 152.4578313253012,
+                "creation_time": 1734618377.2218232,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1187483.pt"
+                ]
+            },
+            {
+                "steps": 1191146,
+                "file_path": "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1191146.onnx",
+                "reward": 69.72972972972973,
+                "creation_time": 1734618499.7791636,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1191146.pt"
+                ]
+            },
+            {
+                "steps": 1199131,
+                "file_path": "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1199131.onnx",
+                "reward": 95.55,
+                "creation_time": 1734618638.2978363,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1199131.pt"
+                ]
+            },
+            {
+                "steps": 1499989,
+                "file_path": "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1499989.onnx",
+                "reward": -101.84,
+                "creation_time": 1734621296.8524714,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1499989.pt"
+                ]
+            },
+            {
+                "steps": 1952648,
+                "file_path": "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1952648.onnx",
+                "reward": -52.43181818181818,
+                "creation_time": 1734625092.4682498,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1952648.pt"
+                ]
+            }
+        ],
+        "elo": 1241.2119205174927,
+        "final_checkpoint": {
+            "steps": 1952648,
+            "file_path": "results\\BuildTraining/Training1\\HideAndSeek.onnx",
+            "reward": -52.43181818181818,
+            "creation_time": 1734625092.4682498,
+            "auxillary_file_paths": [
+                "results\\BuildTraining/Training1\\HideAndSeek\\HideAndSeek-1952648.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.5.1+cu124"
+    }
+}

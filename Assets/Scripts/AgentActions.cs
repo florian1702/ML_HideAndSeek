@@ -169,16 +169,20 @@ public class AgentActions : MonoBehaviour
     {
         if (grabbedInteractable == null)
         {
-            if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
+            // Nur Grab erlauben, wenn die Phase vorbei ist oder der Agent ein Hider ist
+            if (GameManager.PreparationPhaseEnded || isHider)
             {
-                if (hit.distance < grabDistance && IsInteractable(hit.collider))
+                if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
                 {
-                    Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
-                    if (interactable.TryGrab(this))
+                    if (hit.distance < grabDistance && IsInteractable(hit.collider))
                     {
-                        grabbedInteractable = interactable;
-                        // Keep rotation of the object relative to the agent
-                        targetRelativeRotation = Quaternion.Inverse(transform.rotation) * grabbedInteractable.transform.rotation;
+                        Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
+                        if (interactable.TryGrab(this))
+                        {
+                            grabbedInteractable = interactable;
+                            // Keep rotation of the object relative to the agent
+                            targetRelativeRotation = Quaternion.Inverse(transform.rotation) * grabbedInteractable.transform.rotation;
+                        }
                     }
                 }
             }
@@ -196,12 +200,16 @@ public class AgentActions : MonoBehaviour
 
     public void LockInteractable(bool tryLock)
     {
-        if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
+        // Nur Lock/Unlock erlauben, wenn die Phase vorbei ist oder der Agent ein Hider ist
+        if (GameManager.PreparationPhaseEnded || isHider)
         {
-            if (hit.distance < grabDistance && IsInteractable(hit.collider))
+            if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
             {
-                Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
-                interactable.TryLockUnlock(this, tryLock);
+                if (hit.distance < grabDistance && IsInteractable(hit.collider))
+                {
+                    Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
+                    interactable.TryLockUnlock(this, tryLock);
+                }
             }
         }
     }

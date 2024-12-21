@@ -21,7 +21,7 @@ behaviors:
         strength: 1.0
     keep_checkpoints: 50
     checkpoint_interval: 250000
-    max_steps: 3000000000
+    max_steps: 10000000
     time_horizon: 500
     summary_freq: 5000
     self_play:

@@ -12,26 +12,26 @@ public class HideAndSeekAgent : Agent
     [Header("Sensors")]
     [SerializeField] private BufferSensorComponent teamBufferSensor = null;
 
+    // Called at the beginning of each episode
     public override void OnEpisodeBegin()
     {
-        transform.localPosition = new Vector3(Random.Range(-8,8), 0, Random.Range(-8,8));
+        // Randomly position the agent within a specified range
+        // I need to do this becouse i dont know why but in the first episode all agents are spawned in the same position
+       transform.localPosition = new Vector3(Random.Range(-8,8), 0, Random.Range(-8,8));
     }
+
+    // Collect observations for the agent
     public override void CollectObservations(VectorSensor sensor)
     {
         Vector3 platformCenter = agentActions.GameManager.transform.position;
 
-        // SELF OBSERVATION - 8 Values
-        // Position (Relative to Platform) - 3 floats
+        // Self observation: position, rotation, velocity, and role (hider/seeker)
         sensor.AddObservation(transform.position - platformCenter);
-        // Rotation - 1 float
         sensor.AddObservation(NormalizeAngle(transform.rotation.eulerAngles.y));
-        // Velocity - 3 floats
         sensor.AddObservation(agentActions.Rigidbody.linearVelocity);
-        // Hider or Seeker - 1 bool
         sensor.AddObservation(agentActions.IsHider);
 
-
-        // TEAM OBSERVATIONS - 7 Values
+        // Team observations: position, rotation, and velocity of team members
         IEnumerable<AgentActions> teamAgents = agentActions.IsHider
                                              ? agentActions.GameManager.GetHiders()
                                              : agentActions.GameManager.GetSeekers();
@@ -40,13 +40,10 @@ public class HideAndSeekAgent : Agent
         {
                 float[] obs = new float[7];
                 Vector3 teamAgentPosition = teamAgent.transform.position - platformCenter;
-                // Position (Relative to Platform) - 3 floats
                 obs[0] = teamAgentPosition.x;
                 obs[1] = teamAgentPosition.y;
                 obs[2] = teamAgentPosition.z;
-                // Rotation - 1 float
                 obs[3] = NormalizeAngle(teamAgent.transform.rotation.eulerAngles.y);
-                // Velocity - 3 floats
                 obs[4] = teamAgent.Rigidbody.linearVelocity.x;
                 obs[5] = teamAgent.Rigidbody.linearVelocity.y;
                 obs[6] = teamAgent.Rigidbody.linearVelocity.z;
@@ -55,6 +52,7 @@ public class HideAndSeekAgent : Agent
         }
     }
 
+    // Process actions received from the neural network or heuristic
     public override void OnActionReceived(ActionBuffers actions)
     {
         float moveX = Mathf.Clamp(actions.ContinuousActions[0], -1f, 1f);
@@ -85,6 +83,7 @@ public class HideAndSeekAgent : Agent
 
     }
 
+    // Define heuristic actions for manual control
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         Vector2 movementInput = Vector2.zero;
@@ -103,15 +102,13 @@ public class HideAndSeekAgent : Agent
 
         agentActions.ApplyRotation(rotationInput);
         
-        // Grabbing, releasing, and locking remains unchanged
         if (Input.GetKey(KeyCode.C)) agentActions.GrabInteractable();
         if (!Input.GetKey(KeyCode.C) && agentActions.IsHolding) agentActions.ReleaseInteractable();
         if (Input.GetKey(KeyCode.Alpha2)) agentActions.LockInteractable(true);
         else if (Input.GetKey(KeyCode.Alpha3)) agentActions.LockInteractable(false);
     }
 
-    // Input: angle in degrees
-    // Output: angle in radians in range [-pi; pi]
+    // Normalize angle to range [-pi, pi] (degrees to radians)
     private float NormalizeAngle(float angle)
     {
         angle = (angle + 180f) % 360f - 180f;
@@ -131,10 +128,8 @@ public class HideAndSeekAgent : Agent
             if (reward < 0f) 
                 rewardColor = Color.red;
 
-            // Setze die Farbe für die Gizmos-Darstellung
             Gizmos.color = rewardColor;
 
-            // Zeichne eine Sphäre an der Position des Objekts
             Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y + 2f, transform.position.z), 0.5f);
         }
     }

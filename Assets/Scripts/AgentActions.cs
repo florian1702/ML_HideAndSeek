@@ -1,7 +1,6 @@
 using UnityEngine;
 public class AgentActions : MonoBehaviour
 {
-
     [SerializeField] private bool isHider = true;
     [SerializeField] private HideAndSeekAgent hideAndSeekAgent = null;
 
@@ -44,23 +43,25 @@ public class AgentActions : MonoBehaviour
     {
         if (isHider || GameManager.PreparationPhaseEnded)
         {
-            // ground check
+            // Check if the agent is grounded
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
             ControlDrag();
             Movement();
             Rotation();
             AdjustGrabbedObject();
 
+            // Adjust movement direction based on slope
             slopeMoveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal);
         }
 
+        // Reset movement and rotation input
         movementInput = Vector2.zero;
         rotationInput = 0f;
     }
 
     private void Movement()
     {
-        // Apply movement
+        // Calculate movement direction
         Vector2 direction = movementInput;
         moveDirection = direction.x * transform.right + direction.y * transform.forward;
 
@@ -83,8 +84,6 @@ public class AgentActions : MonoBehaviour
         {
             // Airborne movement with stronger gravity pull
             rb.AddForce(moveDirection.normalized * moveSpeed * airMultiplier, ForceMode.Force);
-
-            // Stronger gravity to pull agent to the ground
             rb.AddForce(Vector3.down * (Physics.gravity.y * -1.5f), ForceMode.Acceleration);
         }
 
@@ -93,6 +92,7 @@ public class AgentActions : MonoBehaviour
     }
     void ControlDrag()
     {
+        // Adjust drag based on whether the agent is grounded
         if (isGrounded)
         {
             rb.linearDamping = groundDrag;
@@ -105,26 +105,25 @@ public class AgentActions : MonoBehaviour
 
     private void Rotation()
     {
-            float delta = rotationInput * rotationSpeed * Time.fixedDeltaTime;
-            rb.MoveRotation(rb.rotation * Quaternion.AngleAxis(delta, Vector3.up));
+        // Apply rotation based on input
+        float delta = rotationInput * rotationSpeed * Time.fixedDeltaTime;
+        rb.MoveRotation(rb.rotation * Quaternion.AngleAxis(delta, Vector3.up));
     }
 
     private void AdjustGrabbedObject()
     {
-        // Adjust grabbed object position / rotation
+        // Adjust grabbed object position and rotation
         if (grabbedInteractable != null)
         {
-            // Adjust position
             Vector3 targetPosition = transform.position + transform.forward * grabDistance;
             Vector3 towards = targetPosition - grabbedInteractable.Rigidbody.position;
             grabbedInteractable.Rigidbody.linearVelocity = towards * 10f;
 
-            // Adjust rotation
             Quaternion targetRotation = transform.rotation * targetRelativeRotation;
             Vector3 angularTowards = ShortestPathFromTo(grabbedInteractable.transform.rotation, targetRotation);
             grabbedInteractable.Rigidbody.angularVelocity = angularTowards * 0.1f;
 
-            // Break in case the object is too far from holder
+            // Release object if it is too far from the agent
             if (Vector3.Distance(grabbedInteractable.Rigidbody.position, transform.position) > holdBreakDistance)
             {
                 grabbedInteractable.Release();
@@ -133,9 +132,7 @@ public class AgentActions : MonoBehaviour
         }
     }
 
-
-
-    // Shortest path rotation from one quaternion to another, returned as euler angles
+    // Calculates the shortest path rotation from one quaternion to another
     private Vector3 ShortestPathFromTo(Quaternion from, Quaternion to)
     {
         Quaternion q = Quaternion.Inverse(from) * to;
@@ -146,14 +143,15 @@ public class AgentActions : MonoBehaviour
         return new Vector3(x, y, z);
     }
 
+    // Checks if the agent is on a slope
     private bool OnSlope()
-{
-    if (Physics.Raycast(transform.position + (transform.forward * 0.2f), Vector3.down, out slopeHit, playerHeight / 2 + 0.5f))
     {
-        return Vector3.Angle(Vector3.up, slopeHit.normal) > 0.1f; // Schräge erkannt
+        if (Physics.Raycast(transform.position + (transform.forward * 0.2f), Vector3.down, out slopeHit, playerHeight / 2 + 0.5f))
+        {
+            return Vector3.Angle(Vector3.up, slopeHit.normal) > 0.1f; // Schräge erkannt
+        }
+        return false;
     }
-    return false;
-}
 
     public void ApplyMovement(Vector2 input)
     {
@@ -167,9 +165,9 @@ public class AgentActions : MonoBehaviour
 
     public void GrabInteractable()
     {
+        // Attempt to grab an interactable object
         if (grabbedInteractable == null)
         {
-            // Nur Grab erlauben, wenn die Phase vorbei ist oder der Agent ein Hider ist
             if (GameManager.PreparationPhaseEnded || isHider)
             {
                 if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
@@ -180,7 +178,6 @@ public class AgentActions : MonoBehaviour
                         if (interactable.TryGrab(this))
                         {
                             grabbedInteractable = interactable;
-                            // Keep rotation of the object relative to the agent
                             targetRelativeRotation = Quaternion.Inverse(transform.rotation) * grabbedInteractable.transform.rotation;
                         }
                     }
@@ -200,7 +197,7 @@ public class AgentActions : MonoBehaviour
 
     public void LockInteractable(bool tryLock)
     {
-        // Nur Lock/Unlock erlauben, wenn die Phase vorbei ist oder der Agent ein Hider ist
+        // Attempt to lock or unlock an interactable object
         if (GameManager.PreparationPhaseEnded || isHider)
         {
             if (Physics.Raycast(new Ray(transform.position, transform.forward), out RaycastHit hit))
@@ -216,6 +213,7 @@ public class AgentActions : MonoBehaviour
 
     public void ResetAgent()
     {
+        // Reset the agent's state
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         grabbedInteractable = null;
@@ -224,6 +222,7 @@ public class AgentActions : MonoBehaviour
 
     private bool IsInteractable(Collider collider)
     {
+        // Check if the collider has an interactable tag
         return collider.CompareTag("Box") || collider.CompareTag("Box Hider Lock") || collider.CompareTag("Box Seeker Lock") ||
                 collider.CompareTag("Ramp") || collider.CompareTag("Ramp Hider Lock") || collider.CompareTag("Ramp Seeker Lock");
     }

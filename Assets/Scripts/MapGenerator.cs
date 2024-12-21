@@ -27,7 +27,6 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private float agentRadius = 0.75f;
 
     [Header("Object placement")]
-    // instantiateBoxes must be on if box count should be randomized every episode
     [SerializeField] private bool instantiateInteractables = true;
     [SerializeField] private Box boxPrefab = null;
     [SerializeField] private Ramp rampPrefab = null;
@@ -47,9 +46,7 @@ public class MapGenerator : MonoBehaviour
     private const int numTriesAgent = 50;
     private const int numTriesBox = 25;
     private const int numTriesRamp = 25;
-
     private List<GameObject> generatedWalls = null;
-
     private AgentActions[] hiders = null;
     private AgentActions[] seekers = null;
     private Box[] boxes = null;
@@ -64,6 +61,7 @@ public class MapGenerator : MonoBehaviour
 
     public void Initialize()
     {
+         // Initialize agents and interactables
         hiders = Enumerable.Range(0, numHidersMax).Select(_ => Instantiate(hiderPrefab, agentParent)).ToArray();
         seekers = Enumerable.Range(0, numSeekersMax).Select(_ => Instantiate(seekerPrefab, agentParent)).ToArray();
 
@@ -74,9 +72,10 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Generates the map
     public void Generate()
     {
-        // Destroy all Walls and create a new list
+        // Destroy all walls and create a new list
         generatedWalls?.ForEach((GameObject wall) => Destroy(wall));
         generatedWalls = new List<GameObject>();
         
@@ -108,6 +107,7 @@ public class MapGenerator : MonoBehaviour
         PlaceStuff();
     }
 
+    // Generates the main room with walls
     private void GenerateMainRoom()
     {
         float size = wallsPosition == 0f ? mapSize : wallsPosition;
@@ -130,6 +130,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Place subroom walls with a specified rotation
     private void PlaceSubroomWalls(float rotation)
     {
         Vector3 roomCenter = 0.5f * (mapSize - roomSize) * new Vector3(1f, 0f, -1f);
@@ -158,12 +159,13 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Places agents and interactables on the map
     private void PlaceStuff()
     {
-        // List of all Positions and Radius
+        // List of all positions and radius
         List<(Vector2, float)> itemPlacement = new List<(Vector2, float)>();
 
-        // Pick Random Number for Agents and Interactables
+        // Pick random number for agents and interactables
         NumHiders = Random.Range(numHidersMin, numHidersMax + 1);
         NumSeekers = Random.Range(numSeekersMin, numSeekersMax + 1);
         
@@ -173,7 +175,7 @@ public class MapGenerator : MonoBehaviour
         {
             if (!TryPlaceObject(itemPlacement, PickPointHider, agentRadius, numTriesAgent))
             {
-                // this shouldn't happen during the training, as it may break trainer
+                // When this happens, the training breaks
                 Debug.LogError("Couldn't randomize agent placement");
                 return;
             }
@@ -184,7 +186,7 @@ public class MapGenerator : MonoBehaviour
         {
             if (!TryPlaceObject(itemPlacement, PickPointSeeker, agentRadius, numTriesAgent))
             {
-                // this shouldn't happen during the training, as it may break trainer
+                // When this happens, the training breaks
                 Debug.LogError("Couldn't randomize agent placement");
                 return;
             }
@@ -219,6 +221,7 @@ public class MapGenerator : MonoBehaviour
             {
                 if (!TryPlaceObject(itemPlacement, PickPointBox, objectRadius, numTriesBox))
                 {
+                    // When this happens, the training breaks
                     Debug.LogWarning("Couldn't randomize box placement");
                     break;
                 }
@@ -229,6 +232,7 @@ public class MapGenerator : MonoBehaviour
             {
                 if (!TryPlaceObject(itemPlacement, PickPointRamp, objectRadius, numTriesRamp))
                 {
+                    // When this happens, the training breaks
                     Debug.LogWarning("Couldn't randomize ramp placement");
                     break;
                 }
@@ -237,6 +241,7 @@ public class MapGenerator : MonoBehaviour
             boxes = new Box[NumBoxes];
             ramps = new Ramp[NumRamps];
 
+            //Set position of Boxes
             for (int i = 0; i < NumBoxes; i++)
             {
                 int id = i + NumHiders + NumSeekers;
@@ -245,6 +250,7 @@ public class MapGenerator : MonoBehaviour
                 boxes[i] = Instantiate(boxPrefab, new Vector3(x, boxY, z) + transform.position, Quaternion.Euler(0f, 0f, 0f));
             }
 
+            // Set position of ramps
             for (int i = 0; i < NumRamps; i++)
             {
                 int id = i + NumHiders + NumSeekers + NumBoxes;
@@ -255,6 +261,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Try to place an object at a valid position
     private bool TryPlaceObject(List<(Vector2, float)> itemPlacement, Func<Vector2> pickPointFn, float radius, int numTries)
     {
         for (int _try = 0; _try < numTries; _try++)
@@ -279,12 +286,14 @@ public class MapGenerator : MonoBehaviour
         return false;
     }
 
+    // Pick a random point anywhere on the map
     private Vector2 PickPointAnywhere(float margin)
     {
         float v = mapSize * 0.5f - margin;
         return PickPointRect(-v, v, -v, v);
     }
 
+    // Pick a random point inside the room
     private Vector2 PickPointRoom(float margin)
     {
         float u = mapSize * 0.5f - roomSize + margin;
@@ -292,6 +301,7 @@ public class MapGenerator : MonoBehaviour
         return PickPointRect(u, v, -v, -u);
     }
 
+    // Pick a random point outside the room
     private Vector2 PickPointOutside(float margin)
     {
         float u = mapSize * 0.5f - roomSize;
@@ -313,23 +323,27 @@ public class MapGenerator : MonoBehaviour
                                                        : PickPointRect(x1B, x2B, z1B, z2B);
     }
 
+    // Pick a random point within a rectangle
     private Vector2 PickPointRect(float minX, float maxX, float minZ, float maxZ)
     {
         return new Vector2(Random.Range(minX, maxX), Random.Range(minZ, maxZ));
     }
 
+    // Pick a random point for hiders
     private Vector2 PickPointHider()
     {
         return generateSubroom ? PickPointRoom(0.5f * wallThickness + agentRadius)
                                : PickPointAnywhere(0.5f * wallThickness + agentRadius);
     }
 
+    // Pick a random point for seekers
     private Vector2 PickPointSeeker()
     {
         return generateSubroom ? PickPointOutside(0.5f * wallThickness + agentRadius)
                                : PickPointAnywhere(0.5f * wallThickness + agentRadius);
     }
 
+    // Pick a random point for boxes
     private Vector2 PickPointBox()
     {
         if (generateSubroom)
@@ -343,12 +357,13 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
+    // Pick a random point for ramps
     private Vector2 PickPointRamp()
     {
         return generateSubroom ? PickPointOutside(0.5f * wallThickness + objectRadius)
                                : PickPointAnywhere(0.5f * wallThickness + objectRadius);
     }
 
-
+    // Check if interactables should be instantiated
     public bool InstantiatesInteractables() => instantiateInteractables;
 }

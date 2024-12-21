@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        // Initialize map and agents and interactables
         mapGenerator.Initialize();
 
         hiderInstances = mapGenerator.GetInstantiatedHiders();
@@ -74,13 +75,16 @@ public class GameManager : MonoBehaviour
         seekersGroup = new SimpleMultiAgentGroup();
 
         interactables = FindObjectsByType<Interactable>(0).ToList();
-
+        
+        // Initialize stats recorder
         statsRecorder = Academy.Instance.StatsRecorder;
+        // Reset the scene
         ResetScene();
     }
 
     private void Update()
     {
+        // Manuelly reset scene on 'P' key press for debugging
         if (Input.GetKeyDown(KeyCode.P))
         {
             ResetScene();
@@ -91,6 +95,7 @@ public class GameManager : MonoBehaviour
     {
         episodeTimer++;
 
+        // Calculate and record mean position of seekers
         Vector3 seekersMeanPosition = Vector3.zero;
         foreach (AgentActions seeker in seekers)
         {
@@ -100,6 +105,7 @@ public class GameManager : MonoBehaviour
         statsRecorder.Add("Environment/SeekersMeanX", seekersMeanPosition.x);
         statsRecorder.Add("Environment/SeekersMeanZ", seekersMeanPosition.z);
 
+        // Calculate and record mean position of hiders
         Vector3 hidersMeanPosition = Vector3.zero;
         foreach (AgentActions hider in hiders)
         {
@@ -144,9 +150,11 @@ public class GameManager : MonoBehaviour
 
     private void EndEpisode()
     {
+        // Calculate time hidden
         float timeHidden = PreparationPhaseEnded ? stepsHidden / Mathf.Ceil(episodeTimer - episodeSteps * preparationPhaseFraction) : 0.0f;
         statsRecorder.Add("Environment/TimeHidden", timeHidden);
 
+        // Determine win condition
         if (winCondition != WinCondition.None)
         {
             bool hidersWon = false;
@@ -177,6 +185,7 @@ public class GameManager : MonoBehaviour
         hidersPerfectGame = true;
         episodeTimer = 0;
 
+        // Reset interactables if not instantiated
         if (!mapGenerator.InstantiatesInteractables())
         {
             foreach (Interactable interactable in interactables)
@@ -185,8 +194,10 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        // Generate new map
         mapGenerator.Generate();
 
+        // Initialize hiders and seekers
         hiders = hiderInstances.Take(mapGenerator.NumHiders).ToList();
         seekers = seekerInstances.Take(mapGenerator.NumSeekers).ToList();
         foreach (AgentActions hider in hiders)
@@ -200,6 +211,7 @@ public class GameManager : MonoBehaviour
             seekersGroup.RegisterAgent(seeker.HideAndSeekAgent);
         }
 
+        // Activate/deactivate agents based on count
         for (int i = 0; i < hiderInstances.Count; i++)
         {
             hiderInstances[i].gameObject.SetActive(i < hiders.Count);
@@ -215,7 +227,7 @@ public class GameManager : MonoBehaviour
         allHidden = false;
     }
 
-
+    // Checks if agent1 can see agent2
     private bool AgentSeesAgent(AgentActions agent1, AgentActions agent2, out RaycastHit hit)
     {
         Vector3 direction = agent2.transform.position - agent1.transform.position;
@@ -242,6 +254,7 @@ public class GameManager : MonoBehaviour
         Array.Fill(visibilityHiders, false);
         Array.Fill(visibilitySeekers, false);
 
+        // Update visibility matrix
         for (int i = 0; i < hiders.Count; i++)
         {
             for (int j = 0; j < seekers.Count; j++)
@@ -263,6 +276,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateRewards()
     {
+        // Update rewards based on visibility and out-of-bounds penalties
         foreach (RewardInfo rewardInfo in rewards)
         {
             switch (rewardInfo.type)
@@ -270,8 +284,13 @@ public class GameManager : MonoBehaviour
                 case RewardInfo.Type.VisibilityTeam:
                     if (!PreparationPhaseEnded) break;
                     float teamReward = allHidden ? rewardInfo.weight : -rewardInfo.weight;
-                    hiders.ForEach((AgentActions hider) => hider.HideAndSeekAgent.AddReward(teamReward));
-                    seekers.ForEach((AgentActions seeker) => seeker.HideAndSeekAgent.AddReward(-teamReward));
+                    //Add reward to hiders and penalty to seekers as a group
+                    hidersGroup.AddGroupReward(teamReward);
+                    seekersGroup.AddGroupReward(-teamReward);  
+                    //Add reward to hiders and penalty to seekers individually
+                    //hiders.ForEach((AgentActions hider) => hider.HideAndSeekAgent.AddReward(teamReward));
+                    //seekers.ForEach((AgentActions seeker) => seeker.HideAndSeekAgent.AddReward(-teamReward));
+                    
                     break;
 
                 case RewardInfo.Type.OobPenalty:
@@ -288,6 +307,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Checks if agent is out of bounds
     private bool IsOoB(AgentActions agent)
     {
         return Mathf.Max(Mathf.Abs(agent.transform.position.x - transform.position.x),
@@ -297,6 +317,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        // Draw visibility field of view for seekers
         if (debugDrawVisibility)
         {
             if(seekers != null){
@@ -306,7 +327,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Bestehender Code zur Darstellung der Arena-Bounds
+        // Draw play area bounds
         if (debugDrawPlayAreaBounds)
         {
             Vector3 center = transform.position;
@@ -320,10 +341,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Zeichnet das Sichtfeld (FoV) eines Agents.
-    /// </summary>
-    /// <param name="agent">Agent, dessen Sichtfeld dargestellt wird.</param>
+    // Draws the field of view (FoV) of an agent
     private void DrawFieldOfView(AgentActions agent)
     {
         if (agent == null || !seekers.Contains(agent)) return;

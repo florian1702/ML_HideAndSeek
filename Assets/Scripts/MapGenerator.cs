@@ -51,6 +51,8 @@ public class MapGenerator : MonoBehaviour
     private AgentActions[] seekers = null;
     private Box[] boxes = null;
     private Ramp[] ramps = null;
+    private bool doorExists = false;
+    private bool placedFirstWall = false;
 
     public int NumHiders { get; private set; } = 0;
     public int NumSeekers { get; private set; } = 0;
@@ -99,6 +101,8 @@ public class MapGenerator : MonoBehaviour
         // Generate Subroom
         if (generateSubroom)
         {
+            doorExists = false;  // Reset
+            placedFirstWall = false;
             PlaceSubroomWalls(0f);
             PlaceSubroomWalls(-90f);
         }
@@ -130,34 +134,64 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    // Place subroom walls with a specified rotation
     private void PlaceSubroomWalls(float rotation)
     {
         Vector3 roomCenter = 0.5f * (mapSize - roomSize) * new Vector3(1f, 0f, -1f);
         float wallZ = -mapSize * 0.5f + roomSize;
 
-        float doorPosition = Random.Range(doorWidth * 0.5f, roomSize - doorWidth * 0.5f);
-        if (doorPosition > doorWidth * 0.5f + 0.25f)
+        // Randomly decide to place a door or not (0 or 1)
+        bool placeDoor = Random.Range(0, 2) == 1;
+
+        // Ensure at least one door exists
+        if (!doorExists && placedFirstWall)
+        {
+            placeDoor = true; // Force a door if none exists yet
+        }
+
+        // Door position (if needed)
+        float doorPosition = placeDoor ? Random.Range(doorWidth * 0.5f, roomSize - doorWidth * 0.5f) : -1f;
+
+        // Place wall segment to the left of the door
+        if (placeDoor && doorPosition > doorWidth * 0.5f + 0.25f)
         {
             float wallLength = doorPosition - doorWidth * 0.5f;
             float wallX = mapSize * 0.5f - roomSize + wallLength * 0.5f;
             GameObject wall = Instantiate(wallPrefab, new Vector3(wallX, wallY, wallZ) + transform.position, Quaternion.identity, wallsParent);
             wall.transform.localScale = new Vector3(wallLength, wall.transform.localScale.y, wall.transform.localScale.z);
             wall.transform.RotateAround(roomCenter, Vector3.up, rotation);
-
             generatedWalls.Add(wall);
         }
-        if (doorPosition < roomSize - doorWidth * 0.5f - 0.25f)
+
+        // Place wall segment to the right of the door
+        if (placeDoor && doorPosition < roomSize - doorWidth * 0.5f - 0.25f)
         {
             float wallLength = roomSize - doorPosition - doorWidth * 0.5f;
             float wallX = mapSize * 0.5f - wallLength * 0.5f;
             GameObject wall = Instantiate(wallPrefab, new Vector3(wallX, wallY, wallZ) + transform.position, Quaternion.identity, wallsParent);
             wall.transform.localScale = new Vector3(wallLength, wall.transform.localScale.y, wall.transform.localScale.z);
             wall.transform.RotateAround(roomCenter, Vector3.up, rotation);
-
             generatedWalls.Add(wall);
         }
+
+        // If no door is placed, add a full wall segment
+        if (!placeDoor)
+        {
+            float wallX = mapSize * 0.5f - roomSize * 0.5f;
+            GameObject wall = Instantiate(wallPrefab, new Vector3(wallX, wallY, wallZ) + transform.position, Quaternion.identity, wallsParent);
+            wall.transform.localScale = new Vector3(roomSize, wall.transform.localScale.y, wall.transform.localScale.z);
+            wall.transform.RotateAround(roomCenter, Vector3.up, rotation);
+            generatedWalls.Add(wall);
+        }
+
+        // Update the door existence flag
+        if (placeDoor)
+        {
+            doorExists = true;
+        }
+
+        if(!placedFirstWall) placedFirstWall = true; 
     }
+
 
     // Places agents and interactables on the map
     private void PlaceStuff()
@@ -346,15 +380,8 @@ public class MapGenerator : MonoBehaviour
     // Pick a random point for boxes
     private Vector2 PickPointBox()
     {
-        if (generateSubroom)
-        {
-            return Random.Range(0, 2) == 0 ? PickPointRoom(0.5f * wallThickness + objectRadius)
-                                           : PickPointOutside(0.5f * wallThickness + objectRadius);
-        }
-        else
-        {
-            return PickPointAnywhere(0.5f * wallThickness + objectRadius);
-        }
+        return generateSubroom ? PickPointRoom(0.5f * wallThickness + objectRadius)
+                               : PickPointAnywhere(0.5f * wallThickness + objectRadius);
     }
 
     // Pick a random point for ramps

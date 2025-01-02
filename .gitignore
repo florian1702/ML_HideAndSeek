@@ -32,6 +32,8 @@
 # Gradle cache directory
 .gradle/
 
+20ArenasBuild
+
 # Python virtual environment
 venv/
 .mypy_cache/

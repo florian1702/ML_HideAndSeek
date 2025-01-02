@@ -25,11 +25,11 @@ public class HideAndSeekAgent : Agent
     {
         Vector3 platformCenter = agentActions.GameManager.transform.position;
 
-        // Self observation: position, rotation, velocity, and role (hider/seeker)
+        // Self observation: position, rotation, velocity, and time left in preperation Phase
         sensor.AddObservation(transform.position - platformCenter);
         sensor.AddObservation(NormalizeAngle(transform.rotation.eulerAngles.y));
         sensor.AddObservation(agentActions.Rigidbody.linearVelocity);
-        sensor.AddObservation(agentActions.IsHider);
+        sensor.AddObservation(agentActions.GameManager.TimeLeftInPreparationPhase);
 
         // Team observations: position, rotation, and velocity of team members
         IEnumerable<AgentActions> teamAgents = agentActions.IsHider

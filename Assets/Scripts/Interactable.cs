@@ -84,7 +84,7 @@ public class Interactable : MonoBehaviour
     // Method to release the interactable object
     public void Release()
     {
-        rb.isKinematic = true;
+        //rb.isKinematic = true;
         transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0);
         transform.position = new Vector3(transform.position.x, startPosition.y, transform.position.z);
         owner = null;
@@ -96,7 +96,7 @@ public class Interactable : MonoBehaviour
         owner = null;
         lockOwner = null;
         tag = tagDefault;
-        rb.isKinematic = true;
+        //rb.isKinematic = true;
         meshRenderer.material = materialDefault;
         transform.position = startPosition;
         transform.rotation = startRotation;

@@ -1,0 +1,278 @@
+{
+    "Seeker": {
+        "checkpoints": [
+            {
+                "steps": 2499950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-2499950.onnx",
+                "reward": -122.62385321100918,
+                "creation_time": 1735571903.3332253,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-2499950.pt"
+                ]
+            },
+            {
+                "steps": 4999950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-4999950.onnx",
+                "reward": -58.69309838472834,
+                "creation_time": 1735577348.1961067,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-4999950.pt"
+                ]
+            },
+            {
+                "steps": 7499950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-7499950.onnx",
+                "reward": 1.0634920634920635,
+                "creation_time": 1735582817.3620038,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-7499950.pt"
+                ]
+            },
+            {
+                "steps": 9999950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-9999950.onnx",
+                "reward": 2.090909090909091,
+                "creation_time": 1735588332.7397842,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-9999950.pt"
+                ]
+            },
+            {
+                "steps": 12499900,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-12499900.onnx",
+                "reward": 46.43010752688172,
+                "creation_time": 1735596300.558437,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-12499900.pt"
+                ]
+            },
+            {
+                "steps": 14021300,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-14021300.onnx",
+                "reward": 74.23384615384616,
+                "creation_time": 1735600522.836097,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-14021300.pt"
+                ]
+            },
+            {
+                "steps": 14999900,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-14999900.onnx",
+                "reward": 40.0,
+                "creation_time": 1735640064.633912,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-14999900.pt"
+                ]
+            },
+            {
+                "steps": 17499950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-17499950.onnx",
+                "reward": 7.370165745856354,
+                "creation_time": 1735644586.6463428,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-17499950.pt"
+                ]
+            },
+            {
+                "steps": 18026850,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-18026850.onnx",
+                "reward": 37.88,
+                "creation_time": 1735646849.8818648,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-18026850.pt"
+                ]
+            },
+            {
+                "steps": 19999950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-19999950.onnx",
+                "reward": 12.902634593356243,
+                "creation_time": 1735815645.0251443,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-19999950.pt"
+                ]
+            },
+            {
+                "steps": 22499950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-22499950.onnx",
+                "reward": 15.438108484005562,
+                "creation_time": 1735822389.5247426,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-22499950.pt"
+                ]
+            },
+            {
+                "steps": 24999900,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-24999900.onnx",
+                "reward": 18.85045045045045,
+                "creation_time": 1735827084.152071,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-24999900.pt"
+                ]
+            },
+            {
+                "steps": 25364400,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-25364400.onnx",
+                "reward": null,
+                "creation_time": 1735827442.656407,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-25364400.pt"
+                ]
+            }
+        ],
+        "elo": 1682.6906593060899,
+        "final_checkpoint": {
+            "steps": 25364400,
+            "file_path": "results\\BuildTraining/VersusPPO/Training2\\Seeker.onnx",
+            "reward": null,
+            "creation_time": 1735827442.656407,
+            "auxillary_file_paths": [
+                "results\\BuildTraining/VersusPPO/Training2\\Seeker\\Seeker-25364400.pt"
+            ]
+        }
+    },
+    "Hider": {
+        "checkpoints": [
+            {
+                "steps": 2499900,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-2499900.onnx",
+                "reward": 98.55187637969095,
+                "creation_time": 1735574320.7415047,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-2499900.pt"
+                ]
+            },
+            {
+                "steps": 4999900,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-4999900.onnx",
+                "reward": 208.24927536231883,
+                "creation_time": 1735579773.9628646,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-4999900.pt"
+                ]
+            },
+            {
+                "steps": 7499950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-7499950.onnx",
+                "reward": 136.14857142857142,
+                "creation_time": 1735585267.42887,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-7499950.pt"
+                ]
+            },
+            {
+                "steps": 9999950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-9999950.onnx",
+                "reward": 147.35632183908046,
+                "creation_time": 1735590770.298371,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-9999950.pt"
+                ]
+            },
+            {
+                "steps": 12499950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-12499950.onnx",
+                "reward": 59.888888888888886,
+                "creation_time": 1735598766.8234227,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-12499950.pt"
+                ]
+            },
+            {
+                "steps": 13951950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-13951950.onnx",
+                "reward": null,
+                "creation_time": 1735600523.210958,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-13951950.pt"
+                ]
+            },
+            {
+                "steps": 14999900,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-14999900.onnx",
+                "reward": -43.77131782945737,
+                "creation_time": 1735638124.5405602,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-14999900.pt"
+                ]
+            },
+            {
+                "steps": 17499900,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-17499900.onnx",
+                "reward": -20.501726121979285,
+                "creation_time": 1735642625.7468238,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-17499900.pt"
+                ]
+            },
+            {
+                "steps": 19677450,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-19677450.onnx",
+                "reward": -3.4792703150912105,
+                "creation_time": 1735646849.5083964,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-19677450.pt"
+                ]
+            },
+            {
+                "steps": 19999900,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-19999900.onnx",
+                "reward": -67.92207792207792,
+                "creation_time": 1735811963.0419593,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-19999900.pt"
+                ]
+            },
+            {
+                "steps": 22499900,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-22499900.onnx",
+                "reward": -3.538784067085954,
+                "creation_time": 1735816509.9747996,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-22499900.pt"
+                ]
+            },
+            {
+                "steps": 24999950,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-24999950.onnx",
+                "reward": 3.2755102040816326,
+                "creation_time": 1735821177.61762,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-24999950.pt"
+                ]
+            },
+            {
+                "steps": 27499900,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-27499900.onnx",
+                "reward": -28.140293637846657,
+                "creation_time": 1735825874.1947649,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-27499900.pt"
+                ]
+            },
+            {
+                "steps": 27688600,
+                "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-27688600.onnx",
+                "reward": -23.36,
+                "creation_time": 1735827442.2490532,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-27688600.pt"
+                ]
+            }
+        ],
+        "elo": 1412.2787523168117,
+        "final_checkpoint": {
+            "steps": 27688600,
+            "file_path": "results\\BuildTraining/VersusPPO/Training2\\Hider.onnx",
+            "reward": -23.36,
+            "creation_time": 1735827442.2490532,
+            "auxillary_file_paths": [
+                "results\\BuildTraining/VersusPPO/Training2\\Hider\\Hider-27688600.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.5.1+cu124"
+    }
+}

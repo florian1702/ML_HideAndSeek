@@ -58,6 +58,16 @@ public class GameManager : MonoBehaviour
         get { return episodeTimer >= episodeSteps * preparationPhaseFraction; }
     }
 
+    public float TimeLeftInPreparationPhase
+    {
+        get 
+        {
+            float preparationPhaseDuration = episodeSteps * preparationPhaseFraction;
+            float timeLeft = preparationPhaseDuration - episodeTimer;
+            return Mathf.Max(timeLeft, 0f); // Ensure the value does not go negative
+        }
+    }
+
     public bool DebugDrawBoxHold => debugDrawBoxHold;
     public bool DebugDrawIndividualReward => debugDrawIndividualReward;
 
@@ -285,11 +295,11 @@ public class GameManager : MonoBehaviour
                     if (!PreparationPhaseEnded) break;
                     float teamReward = allHidden ? rewardInfo.weight : -rewardInfo.weight;
                     //Add reward to hiders and penalty to seekers as a group
-                    hidersGroup.AddGroupReward(teamReward);
-                    seekersGroup.AddGroupReward(-teamReward);  
+                    //hidersGroup.AddGroupReward(teamReward);
+                    //seekersGroup.AddGroupReward(-teamReward);  
                     //Add reward to hiders and penalty to seekers individually
-                    //hiders.ForEach((AgentActions hider) => hider.HideAndSeekAgent.AddReward(teamReward));
-                    //seekers.ForEach((AgentActions seeker) => seeker.HideAndSeekAgent.AddReward(-teamReward));
+                    hiders.ForEach((AgentActions hider) => hider.HideAndSeekAgent.AddReward(teamReward));
+                    seekers.ForEach((AgentActions seeker) => seeker.HideAndSeekAgent.AddReward(-teamReward));
                     
                     break;
 

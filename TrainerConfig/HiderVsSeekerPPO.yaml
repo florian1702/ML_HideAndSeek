@@ -12,8 +12,8 @@ behaviors:
       learning_rate_schedule: constant
     network_settings:
       normalize: false
-      hidden_units: 512          # Höhere Kapazität für komplexe strategische Berechnungen
-      num_layers: 3               # Weitere Layers für dynamischere Modelle
+      hidden_units: 512          
+      num_layers: 3              
       vis_encode_type: simple
       goal_conditioning_type: none
     reward_signals:
@@ -49,8 +49,8 @@ behaviors:
       learning_rate_schedule: constant
     network_settings:
       normalize: false
-      hidden_units: 512          # Höhere Kapazität für komplexe strategische Berechnungen
-      num_layers: 3               # Weitere Layers für dynamischere Modelle
+      hidden_units: 512          
+      num_layers: 3             
       vis_encode_type: simple
       goal_conditioning_type: none
     reward_signals:

@@ -237,7 +237,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BrainParameters:
     VectorObservationSize: 8
-    NumStackedVectorObservations: 1
+    NumStackedVectorObservations: 5
     m_ActionSpec:
       m_NumContinuousActions: 3
       BranchSizes: 0200000003000000
@@ -281,7 +281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd8012d5925524537b27131fef517017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SensorName: teamBufferSensor
+  m_SensorName: SeekerTeamBufferSensor
   m_ObservableSize: 7
   m_MaxNumObservables: 3
 --- !u!114 &6719247462315993798
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bb6b867a41448888c1cd4f99643ad71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SensorName: RayPerceptionSensor
+  m_SensorName: SeekerRayPerceptionSensor
   m_DetectableTags:
   - Wall
   - Seeker
@@ -310,7 +310,7 @@ MonoBehaviour:
   m_RaysPerDirection: 15
   m_MaxRayDegrees: 180
   m_SphereCastRadius: 0.5
-  m_RayLength: 10
+  m_RayLength: 25
   m_RayLayerMask:
     serializedVersion: 2
     m_Bits: 4294967241

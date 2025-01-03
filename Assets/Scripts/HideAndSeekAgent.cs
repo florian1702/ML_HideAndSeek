@@ -12,12 +12,22 @@ public class HideAndSeekAgent : Agent
     [Header("Sensors")]
     [SerializeField] private BufferSensorComponent teamBufferSensor = null;
 
+    private const float POSITION_MIN = -12.5f;
+    private const float POSITION_MAX = 12.5f;
+
+    private const float VELOCITY_MIN =  -3f; // Example bounds for velocity
+    private const float VELOCITY_MAX = 3f;
+
+    private const float PREP_PHASE_MIN = 0f;
+    private const float PREP_PHASE_MAX = 500f * 0.4f; // Example max prep phase time
+
     // Called at the beginning of each episode
     public override void OnEpisodeBegin()
     {
         // Randomly position the agent within a specified range
         // I need to do this becouse i dont know why but in the first episode all agents are spawned in the same position
-       transform.localPosition = new Vector3(Random.Range(-8,8), 0, Random.Range(-8,8));
+       transform.localPosition = new Vector3(Random.Range(POSITION_MIN + 1,POSITION_MAX - 1), 0, Random.Range(POSITION_MIN + 1,POSITION_MAX - 1));
+        
     }
 
     // Collect observations for the agent
@@ -26,10 +36,22 @@ public class HideAndSeekAgent : Agent
         Vector3 platformCenter = agentActions.GameManager.transform.position;
 
         // Self observation: position, rotation, velocity, and time left in preperation Phase
-        sensor.AddObservation(transform.position - platformCenter);
-        sensor.AddObservation(NormalizeAngle(transform.rotation.eulerAngles.y));
-        sensor.AddObservation(agentActions.Rigidbody.linearVelocity);
-        sensor.AddObservation(agentActions.GameManager.TimeLeftInPreparationPhase);
+        Vector3 normalizedPosition = NormalizeVector(transform.position - platformCenter, POSITION_MIN, POSITION_MAX);
+        sensor.AddObservation(normalizedPosition);
+
+        float normalizedAngle = NormalizeAngle(transform.rotation.eulerAngles.y);
+        sensor.AddObservation(normalizedAngle);
+
+        Vector3 normalizedVelocity = NormalizeVector(agentActions.Rigidbody.linearVelocity, VELOCITY_MIN, VELOCITY_MAX);
+        sensor.AddObservation(normalizedVelocity);
+
+        float normalizedTimeLeft = NormalizeValue(agentActions.GameManager.TimeLeftInPreparationPhase, PREP_PHASE_MIN, PREP_PHASE_MAX);
+        sensor.AddObservation(normalizedTimeLeft);
+
+        //sensor.AddObservation(transform.position - platformCenter);
+        //sensor.AddObservation(NormalizeAngle(transform.rotation.eulerAngles.y));
+        //sensor.AddObservation(agentActions.Rigidbody.linearVelocity);
+        //sensor.AddObservation(agentActions.GameManager.TimeLeftInPreparationPhase);
 
         // Team observations: position, rotation, and velocity of team members
         IEnumerable<AgentActions> teamAgents = agentActions.IsHider
@@ -38,18 +60,22 @@ public class HideAndSeekAgent : Agent
 
         foreach (AgentActions teamAgent in teamAgents)
         {
-                float[] obs = new float[7];
-                Vector3 teamAgentPosition = teamAgent.transform.position - platformCenter;
-                obs[0] = teamAgentPosition.x;
-                obs[1] = teamAgentPosition.y;
-                obs[2] = teamAgentPosition.z;
-                obs[3] = NormalizeAngle(teamAgent.transform.rotation.eulerAngles.y);
-                obs[4] = teamAgent.Rigidbody.linearVelocity.x;
-                obs[5] = teamAgent.Rigidbody.linearVelocity.y;
-                obs[6] = teamAgent.Rigidbody.linearVelocity.z;
+            float[] obs = new float[7];
+            Vector3 teamAgentPosition = NormalizeVector(teamAgent.transform.position - transform.position, POSITION_MIN, POSITION_MAX);
+            obs[0] = teamAgentPosition.x;
+            obs[1] = teamAgentPosition.y;
+            obs[2] = teamAgentPosition.z;
 
-                teamBufferSensor.AppendObservation(obs);
+            obs[3] = NormalizeAngle(teamAgent.transform.rotation.eulerAngles.y);
+
+            Vector3 teamAgentVelocity = NormalizeVector(teamAgent.Rigidbody.linearVelocity, VELOCITY_MIN, VELOCITY_MAX);
+            obs[4] = teamAgentVelocity.x;
+            obs[5] = teamAgentVelocity.y;
+            obs[6] = teamAgentVelocity.z;
+
+            teamBufferSensor.AppendObservation(obs);
         }
+  
     }
 
     // Process actions received from the neural network or heuristic
@@ -106,6 +132,20 @@ public class HideAndSeekAgent : Agent
         if (!Input.GetKey(KeyCode.C) && agentActions.IsHolding) agentActions.ReleaseInteractable();
         if (Input.GetKey(KeyCode.Alpha2)) agentActions.LockInteractable(true);
         else if (Input.GetKey(KeyCode.Alpha3)) agentActions.LockInteractable(false);
+    }
+
+      private float NormalizeValue(float currentValue, float minValue, float maxValue)
+    {
+        return (currentValue - minValue) / (maxValue - minValue);
+    }
+
+    private Vector3 NormalizeVector(Vector3 vector, float minValue, float maxValue)
+    {
+        return new Vector3(
+            NormalizeValue(vector.x, minValue, maxValue),
+            NormalizeValue(vector.y, minValue, maxValue),
+            NormalizeValue(vector.z, minValue, maxValue)
+        );
     }
 
     // Normalize angle to range [-pi, pi] (degrees to radians)

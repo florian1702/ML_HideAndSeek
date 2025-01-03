@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int episodeSteps = 240;
+    [SerializeField] private int episodeSteps = 500;
     [SerializeField] private float preparationPhaseFraction = 0.4f;
     [SerializeField] private float coneAngle = 67.5f;
     [SerializeField] private MapGenerator mapGenerator = null;
@@ -165,6 +165,7 @@ public class GameManager : MonoBehaviour
         statsRecorder.Add("Environment/TimeHidden", timeHidden);
 
         // Determine win condition
+        /*
         if (winCondition != WinCondition.None)
         {
             bool hidersWon = false;
@@ -183,7 +184,7 @@ public class GameManager : MonoBehaviour
                 Debug.LogFormat("Team {0} won; Time percentage hidden - {1}", hidersWon ? "hiders" : "seekers", timeHidden * 100f);
             }
         }
-
+        */
         hidersGroup.EndGroupEpisode();
         seekersGroup.EndGroupEpisode();
         ResetScene();
@@ -295,11 +296,11 @@ public class GameManager : MonoBehaviour
                     if (!PreparationPhaseEnded) break;
                     float teamReward = allHidden ? rewardInfo.weight : -rewardInfo.weight;
                     //Add reward to hiders and penalty to seekers as a group
-                    //hidersGroup.AddGroupReward(teamReward);
-                    //seekersGroup.AddGroupReward(-teamReward);  
+                    hidersGroup.AddGroupReward(teamReward);
+                    seekersGroup.AddGroupReward(-teamReward);  
                     //Add reward to hiders and penalty to seekers individually
-                    hiders.ForEach((AgentActions hider) => hider.HideAndSeekAgent.AddReward(teamReward));
-                    seekers.ForEach((AgentActions seeker) => seeker.HideAndSeekAgent.AddReward(-teamReward));
+                    //hiders.ForEach((AgentActions hider) => hider.HideAndSeekAgent.AddReward(teamReward));
+                    //seekers.ForEach((AgentActions seeker) => seeker.HideAndSeekAgent.AddReward(-teamReward));
                     
                     break;
 

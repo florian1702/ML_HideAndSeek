@@ -1,31 +1,10 @@
-Teambased reward (visibility-based):
-1 if all hiders are hidden
--1 if any hider is seen by a seeker
-seekers opposite (1 if any hider is seen, -1 if all hiders are hidden)
-
--10 if leaving arena(outside an 18 meter square)
-episode lasts 240 timestamps
-40% preperations phase (no rewards)
-
-1 to 3 hiders, 1 to 3 seekers, 3 to 9 movable boxes of which at least 3 are elongated, 2
-movable ramps, and randomly generated static walls and rooms.
-
-Also trained in simple static rooms (fixed room with 1-2 doors, 2 boxes, 1 ramp, only boxes can be locked)
-
-
-
-
 
 Agents observe the position, velocity, and size (in the case of the randomly shaped boxes) of objects and other agents
 Außerdem beobachtet jeder Agent sein eigenes Team und die Teams der anderen Agenten sowie die verbleibende Zeit in der Vorbereitungsphase
 Die Agenten verfügen außerdem über 30 Entfernungssensoren, die gleichmäßig um sie herum angeordnet sind, ähnlich wie bei einem Lidar
 Befinden sich die Objekte nicht in Sichtweite des Agenten oder nicht in einem 135-Grad-Kegel vor dem Agenten, werden sie in der Richtlinie ausgeblendet
 
-Agents are trained using self-play
 
 
 
-Sie können sich bewegen, indem sie eine diskrete Kraft entlang ihrer x- und y-Achse und ein Drehmoment um ihre z-Achse einstellen. 
-Sie verfügen über eine einzige binäre Aktion zum Greifen von Objekten, die den Agenten an das nächstgelegene Objekt bindet, solange die Aktion aktiviert ist. 
-Agenten können Objekte auch mit einer einzigen binären Aktion an ihrem Platz sperren
-(Agenten können nur Objekte greifen oder sperren, die sich vor ihnen und in einem kleinen Radius befinden)
+Beta erhöhen, stacked obeservation, 

@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float preparationPhaseFraction = 0.4f;
     [SerializeField] private float coneAngle = 67.5f;
     [SerializeField] private MapGenerator mapGenerator = null;
-
+    [SerializeField] private Trainer trainer = Trainer.PPO;
 
     [Serializable]
     public struct RewardInfo
@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
     };
 
     public enum WinCondition { None, LineOfSight };
+
+    public enum Trainer { PPO, MA_POCA };
+
 
     [Header("Game Rules")]
     [SerializeField] private List<RewardInfo> rewards = null;
@@ -294,12 +297,18 @@ public class GameManager : MonoBehaviour
                 case RewardInfo.Type.VisibilityTeam:
                     if (!PreparationPhaseEnded) break;
                     float teamReward = allHidden ? rewardInfo.weight : -rewardInfo.weight;
-                    //Add reward to hiders and penalty to seekers as a group
-                    //hidersGroup.AddGroupReward(teamReward);
-                    //seekersGroup.AddGroupReward(-teamReward);  
-                    //Add reward to hiders and penalty to seekers individually
-                    hiders.ForEach((AgentActions hider) => hider.HideAndSeekAgent.AddReward(teamReward));
-                    seekers.ForEach((AgentActions seeker) => seeker.HideAndSeekAgent.AddReward(-teamReward));
+                    //Add reward to hiders and penalty to seekers as a group when MA-POCA is used
+                    if(trainer == Trainer.MA_POCA)
+                    {
+                        hidersGroup.AddGroupReward(teamReward);
+                        seekersGroup.AddGroupReward(-teamReward);
+                    }
+                    //Add reward to hiders and penalty to seekers individually when PPO is used
+                    else if(trainer == Trainer.PPO)
+                    {
+                        hiders.ForEach((AgentActions hider) => hider.HideAndSeekAgent.AddReward(teamReward));
+                        seekers.ForEach((AgentActions seeker) => seeker.HideAndSeekAgent.AddReward(-teamReward));
+                    }
                     
                     break;
 

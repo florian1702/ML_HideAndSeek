@@ -20,15 +20,11 @@ public class GameManager : MonoBehaviour
         public float weight;
     };
 
-    public enum WinCondition { None, LineOfSight };
-
     public enum Trainer { PPO, MA_POCA };
 
 
     [Header("Game Rules")]
     [SerializeField] private List<RewardInfo> rewards = null;
-    [SerializeField] private WinCondition winCondition = WinCondition.None;
-    [SerializeField] private float winConditionReward = 1.0f;
     [SerializeField] private float arenaSize = 20f;
 
     [Header("Debug")]
@@ -36,7 +32,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool debugDrawVisibility = true;
     [SerializeField] private bool debugDrawIndividualReward = true;
     [SerializeField] private bool debugDrawPlayAreaBounds = true;
-    [SerializeField] private bool debugLogMatchResult = true;
 
     private int episodeTimer = 0;
     private List<AgentActions> hiders;
@@ -53,7 +48,6 @@ public class GameManager : MonoBehaviour
     private bool allHidden;
 
     private int stepsHidden = 0;
-    private bool hidersPerfectGame = true;
     private StatsRecorder statsRecorder = null;
 
     public bool PreparationPhaseEnded
@@ -138,10 +132,6 @@ public class GameManager : MonoBehaviour
         {
             FillVisibilityMatrix();
             stepsHidden += allHidden ? 1 : 0;
-            if (!allHidden)
-            {
-                hidersPerfectGame = false;
-            }
         }
     }
 
@@ -167,23 +157,12 @@ public class GameManager : MonoBehaviour
         float timeHidden = PreparationPhaseEnded ? stepsHidden / Mathf.Ceil(episodeTimer - episodeSteps * preparationPhaseFraction) : 0.0f;
         statsRecorder.Add("Environment/TimeHidden", timeHidden);
 
-        // Determine win condition
-        if (winCondition != WinCondition.None)
+        //Record locked interactables at the end of the episode
+        foreach (Interactable interactable in interactables)
         {
-            bool hidersWon = false;
-            if (winCondition == WinCondition.LineOfSight && hidersPerfectGame)
+            if (interactable.LockOwner != null)
             {
-                hidersWon = true;
-            }
-
-
-            hidersGroup.AddGroupReward(hidersWon ? winConditionReward : -winConditionReward);
-            seekersGroup.AddGroupReward(hidersWon ? -winConditionReward : winConditionReward);
-            statsRecorder.Add("Environment/HiderWinRatio", hidersWon ? 1 : 0);
-        
-            if (debugLogMatchResult)
-            {
-                Debug.LogFormat("Team {0} won; Time percentage hidden - {1}", hidersWon ? "hiders" : "seekers", timeHidden * 100f);
+                statsRecorder.Add("Environment/LockedInteractables", 1);
             }
         }
 
@@ -195,7 +174,6 @@ public class GameManager : MonoBehaviour
     private void ResetScene()
     {
         stepsHidden = 0;
-        hidersPerfectGame = true;
         episodeTimer = 0;
 
         // Reset interactables if not instantiated

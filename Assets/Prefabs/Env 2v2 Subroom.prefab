@@ -34,6 +34,7 @@ Transform:
   - {fileID: 272651945393059700}
   - {fileID: 7590566968053437817}
   - {fileID: 6834616164512198009}
+  - {fileID: 104643372013338192}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &614172738818507143
@@ -52,19 +53,17 @@ MonoBehaviour:
   preparationPhaseFraction: 0.4
   coneAngle: 67.5
   mapGenerator: {fileID: 2288620831828099929}
+  trainer: 0
   rewards:
   - type: 1
     weight: 10
   - type: 0
     weight: 1
-  winCondition: 0
-  winConditionReward: 1
   arenaSize: 25
   debugDrawBoxHold: 1
   debugDrawVisibility: 1
   debugDrawIndividualReward: 1
   debugDrawPlayAreaBounds: 1
-  debugLogMatchResult: 1
 --- !u!114 &2288620831828099929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,9 +92,9 @@ MonoBehaviour:
   numSeekersMax: 2
   agentY: 1
   agentRadius: 0.75
-  instantiateInteractables: 1
-  boxPrefab: {fileID: 6311994391481905148, guid: edd4579d0b2c55a4a8ff147dfefdd9aa, type: 3}
-  rampPrefab: {fileID: 2203827442845647704, guid: 8df3a1db02b61c2489cfb382413e10e6, type: 3}
+  interactableParent: {fileID: 104643372013338192}
+  boxPrefab: {fileID: -1313528493226617139, guid: edd4579d0b2c55a4a8ff147dfefdd9aa, type: 3}
+  rampPrefab: {fileID: 5377167929218876227, guid: 8df3a1db02b61c2489cfb382413e10e6, type: 3}
   numBoxesMin: 2
   numBoxesMax: 2
   numRampsMin: 1
@@ -246,6 +245,37 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &6391869545460038967
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 104643372013338192}
+  m_Layer: 0
+  m_Name: Interactables
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &104643372013338192
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6391869545460038967}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2518838290219750159}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7495835435560777148
 GameObject:
   m_ObjectHideFlags: 0

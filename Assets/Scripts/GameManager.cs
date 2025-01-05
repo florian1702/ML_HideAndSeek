@@ -36,12 +36,14 @@ public class GameManager : MonoBehaviour
     private int episodeTimer = 0;
     private List<AgentActions> hiders;
     private List<AgentActions> seekers;
+    private List<Interactable> boxes;
+    private List<Interactable> ramps;
     private List<AgentActions> hiderInstances;
     private List<AgentActions> seekerInstances;
+    private List<Interactable> boxInstances;
+    private List<Interactable> rampInstances;
     private SimpleMultiAgentGroup hidersGroup;
     private SimpleMultiAgentGroup seekersGroup;
-    private List<Interactable> interactables;
-
     private bool[,] visibilityMatrix;
     private bool[] visibilityHiders;
     private bool[] visibilitySeekers;
@@ -55,6 +57,7 @@ public class GameManager : MonoBehaviour
         get { return episodeTimer >= episodeSteps * preparationPhaseFraction; }
     }
 
+    public float ConeAngle{ get { return coneAngle; } }
     public float TimeLeftInPreparationPhase
     {
         get 
@@ -75,16 +78,17 @@ public class GameManager : MonoBehaviour
 
         hiderInstances = mapGenerator.GetInstantiatedHiders();
         seekerInstances = mapGenerator.GetInstantiatedSeekers();
+        boxInstances = mapGenerator.GetInstantiatedBoxes();
+        rampInstances = mapGenerator.GetInstantiatedRamps();
         hiderInstances.ForEach(hider => hider.GameManager = this);
         seekerInstances.ForEach(seeker => seeker.GameManager = this);
     
         hidersGroup = new SimpleMultiAgentGroup();
         seekersGroup = new SimpleMultiAgentGroup();
-
-        interactables = FindObjectsByType<Interactable>(0).ToList();
         
         // Initialize stats recorder
         statsRecorder = Academy.Instance.StatsRecorder;
+        
         // Reset the scene
         ResetScene();
     }
@@ -151,6 +155,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public IEnumerable<Interactable> GetBoxes()
+    {
+        foreach(Interactable box in boxInstances)
+        {
+            yield return box;
+        }
+    }
+
+    public IEnumerable<Interactable> GetRamps()
+    {
+        foreach(Interactable ramp in rampInstances)
+        {
+            yield return ramp;
+        }
+    }
+
     private void EndEpisode()
     {
         // Calculate time hidden
@@ -158,11 +178,11 @@ public class GameManager : MonoBehaviour
         statsRecorder.Add("Environment/TimeHidden", timeHidden);
 
         //Record locked interactables at the end of the episode
-        foreach (Interactable interactable in interactables)
+        foreach (Interactable box in boxes)
         {
-            if (interactable.LockOwner != null)
+            if (box.LockOwner != null)
             {
-                statsRecorder.Add("Environment/LockedInteractables", 1);
+                statsRecorder.Add("Environment/LockedBoxes", 1);
             }
         }
 
@@ -176,21 +196,15 @@ public class GameManager : MonoBehaviour
         stepsHidden = 0;
         episodeTimer = 0;
 
-        // Reset interactables if not instantiated
-        if (!mapGenerator.InstantiatesInteractables())
-        {
-            foreach (Interactable interactable in interactables)
-            {
-                interactable.Reset();
-            }
-        }
-
         // Generate new map
         mapGenerator.Generate();
 
-        // Initialize hiders and seekers
+        // Initialize hiders, seekers and interacrables
         hiders = hiderInstances.Take(mapGenerator.NumHiders).ToList();
         seekers = seekerInstances.Take(mapGenerator.NumSeekers).ToList();
+        boxes = boxInstances.Take(mapGenerator.NumBoxes).ToList();
+        ramps = rampInstances.Take(mapGenerator.NumRamps).ToList();
+
         foreach (AgentActions hider in hiders)
         {
             hider.ResetAgent();
@@ -201,8 +215,16 @@ public class GameManager : MonoBehaviour
             seeker.ResetAgent();
             seekersGroup.RegisterAgent(seeker.HideAndSeekAgent);
         }
+        foreach (Interactable box in boxes)
+        {
+            box.Reset();
+        }
+        foreach (Interactable ramp in ramps)
+        {
+            ramp.Reset();
+        }
 
-        // Activate/deactivate agents based on count
+        // Activate/deactivate agents and interactables based on count
         for (int i = 0; i < hiderInstances.Count; i++)
         {
             hiderInstances[i].gameObject.SetActive(i < hiders.Count);
@@ -210,6 +232,14 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < seekerInstances.Count; i++)
         {
             seekerInstances[i].gameObject.SetActive(i < seekers.Count);
+        }
+        for (int i = 0; i < boxInstances.Count; i++)
+        {
+            boxInstances[i].gameObject.SetActive(i < boxes.Count);
+        }
+        for (int i = 0; i < rampInstances.Count; i++)
+        {
+            rampInstances[i].gameObject.SetActive(i < ramps.Count);
         }
 
         visibilityMatrix = new bool[hiders.Count, seekers.Count];

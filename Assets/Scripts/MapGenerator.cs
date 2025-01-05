@@ -17,7 +17,7 @@ public class MapGenerator : MonoBehaviour
     [Header("Agent placement")]
     // instantiateAgents must be on if agent count should be randomized every episode
     [SerializeField] private Transform agentParent = null;
-    [SerializeField] private  AgentActions hiderPrefab = null;
+    [SerializeField] private AgentActions hiderPrefab = null;
     [SerializeField] private AgentActions seekerPrefab = null;
     [SerializeField] private int numHidersMin = 3;
     [SerializeField] private int numHidersMax = 3;
@@ -27,9 +27,9 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private float agentRadius = 0.75f;
 
     [Header("Object placement")]
-    [SerializeField] private bool instantiateInteractables = true;
-    [SerializeField] private Box boxPrefab = null;
-    [SerializeField] private Ramp rampPrefab = null;
+    [SerializeField] private Transform interactableParent = null;
+    [SerializeField] private Interactable boxPrefab = null;
+    [SerializeField] private Interactable rampPrefab = null;
     [SerializeField] private int numBoxesMin = 2;
     [SerializeField] private int numBoxesMax = 2;
     [SerializeField] private int numRampsMin = 1;
@@ -49,8 +49,8 @@ public class MapGenerator : MonoBehaviour
     private List<GameObject> generatedWalls = null;
     private AgentActions[] hiders = null;
     private AgentActions[] seekers = null;
-    private Box[] boxes = null;
-    private Ramp[] ramps = null;
+    private Interactable[] boxes = null;
+    private Interactable[] ramps = null;
     private bool doorExists = false;
     private bool placedFirstWall = false;
 
@@ -60,18 +60,16 @@ public class MapGenerator : MonoBehaviour
     public int NumRamps { get; private set; } = 0;
     public List<AgentActions> GetInstantiatedHiders() => hiders.ToList();
     public List<AgentActions> GetInstantiatedSeekers() => seekers.ToList();
+    public List<Interactable> GetInstantiatedBoxes() => boxes.ToList();
+    public List<Interactable> GetInstantiatedRamps() => ramps.ToList();
 
     public void Initialize()
     {
-         // Initialize agents and interactables
+        // Initialize agents and interactables
         hiders = Enumerable.Range(0, numHidersMax).Select(_ => Instantiate(hiderPrefab, agentParent)).ToArray();
         seekers = Enumerable.Range(0, numSeekersMax).Select(_ => Instantiate(seekerPrefab, agentParent)).ToArray();
-
-        if (!instantiateInteractables)
-        {
-            boxes = FindObjectsByType<Box>(0);
-            ramps = FindObjectsByType<Ramp>(0);
-        }
+        boxes = Enumerable.Range(0, numBoxesMax).Select(_ => Instantiate(boxPrefab, interactableParent)).ToArray();
+        ramps = Enumerable.Range(0, numRampsMax).Select(_ => Instantiate(rampPrefab, interactableParent)).ToArray();
     }
 
     // Generates the map
@@ -83,20 +81,6 @@ public class MapGenerator : MonoBehaviour
         
         // Generate Mainroom
         GenerateMainRoom();
-        
-        // Destroy all Interactables
-        if (instantiateInteractables)
-        {
-            if (boxes != null)
-            {
-                Array.ForEach(boxes, (Box box) => Destroy(box.gameObject));
-            }
-            if (ramps != null)
-            {
-                Array.ForEach(ramps, (Ramp ramp) => Destroy(ramp.gameObject));
-            }
-        }
-
 
         // Generate Subroom
         if (generateSubroom)
@@ -202,7 +186,9 @@ public class MapGenerator : MonoBehaviour
         // Pick random number for agents and interactables
         NumHiders = Random.Range(numHidersMin, numHidersMax + 1);
         NumSeekers = Random.Range(numSeekersMin, numSeekersMax + 1);
-        
+        NumBoxes = Random.Range(numBoxesMin, numBoxesMax + 1);
+        NumRamps = Random.Range(numRampsMin, numRampsMax + 1);
+
         
         //Find place for hiders
         for (int i = 0; i < NumHiders; i++)
@@ -226,6 +212,28 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
+        //Find place for Boxes
+        for (int i = 0; i < NumBoxes; i++)
+        {
+            if (!TryPlaceObject(itemPlacement, PickPointBox, objectRadius, numTriesBox))
+            {
+                // When this happens, the training breaks
+                Debug.LogWarning("Couldn't randomize box placement");
+                break;
+            }
+        }
+
+        //Find place for Ramps
+        for (int i = 0; i < NumRamps; i++)
+        {
+            if (!TryPlaceObject(itemPlacement, PickPointRamp, objectRadius, numTriesRamp))
+            {
+                // When this happens, the training breaks
+                Debug.LogWarning("Couldn't randomize ramp placement");
+                break;
+            }
+        }
+
         //Set position and random rotation of hiders
         for (int i = 0; i < NumHiders; i++)
         {
@@ -245,54 +253,26 @@ public class MapGenerator : MonoBehaviour
             seekers[i].transform.rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
         }    
 
-
-        if(instantiateInteractables){
-            NumBoxes = Random.Range(numBoxesMin, numBoxesMax + 1);
-            NumRamps = Random.Range(numRampsMin, numRampsMax + 1);
-
-            //Find place for Boxes
-            for (int i = 0; i < NumBoxes; i++)
-            {
-                if (!TryPlaceObject(itemPlacement, PickPointBox, objectRadius, numTriesBox))
-                {
-                    // When this happens, the training breaks
-                    Debug.LogWarning("Couldn't randomize box placement");
-                    break;
-                }
-            }
-
-            //Find place for Ramps
-            for (int i = 0; i < NumRamps; i++)
-            {
-                if (!TryPlaceObject(itemPlacement, PickPointRamp, objectRadius, numTriesRamp))
-                {
-                    // When this happens, the training breaks
-                    Debug.LogWarning("Couldn't randomize ramp placement");
-                    break;
-                }
-            }
-
-            boxes = new Box[NumBoxes];
-            ramps = new Ramp[NumRamps];
-
-            //Set position of Boxes
-            for (int i = 0; i < NumBoxes; i++)
-            {
-                int id = i + NumHiders + NumSeekers;
-                float x = itemPlacement[id].Item1.x;
-                float z = itemPlacement[id].Item1.y;
-                boxes[i] = Instantiate(boxPrefab, new Vector3(x, boxY, z) + transform.position, Quaternion.Euler(0f, 0f, 0f));
-            }
-
-            // Set position of ramps
-            for (int i = 0; i < NumRamps; i++)
-            {
-                int id = i + NumHiders + NumSeekers + NumBoxes;
-                float x = itemPlacement[id].Item1.x;
-                float z = itemPlacement[id].Item1.y;
-                ramps[i] = Instantiate(rampPrefab, new Vector3(x, rampY, z) + transform.position, Quaternion.Euler(0f, 90f, 0f));
-            }
+        //Set position of Boxes
+        for (int i = 0; i < NumBoxes; i++)
+        {
+            int id = i + NumHiders + NumSeekers;
+            float x = itemPlacement[id].Item1.x;
+            float z = itemPlacement[id].Item1.y;
+            boxes[i].transform.position = new Vector3(x, boxY, z) + transform.position;
+            boxes[i].transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
+
+        // Set position of ramps
+        for (int i = 0; i < NumRamps; i++)
+        {
+            int id = i + NumHiders + NumSeekers + NumBoxes;
+            float x = itemPlacement[id].Item1.x;
+            float z = itemPlacement[id].Item1.y;
+            ramps[i].transform.position = new Vector3(x, rampY, z) + transform.position;
+            ramps[i].transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+        }
+        
     }
 
     // Try to place an object at a valid position
@@ -390,7 +370,4 @@ public class MapGenerator : MonoBehaviour
         return generateSubroom ? PickPointOutside(0.5f * wallThickness + objectRadius)
                                : PickPointAnywhere(0.5f * wallThickness + objectRadius);
     }
-
-    // Check if interactables should be instantiated
-    public bool InstantiatesInteractables() => instantiateInteractables;
 }

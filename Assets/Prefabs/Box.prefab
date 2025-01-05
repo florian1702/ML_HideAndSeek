@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9009798178178383813}
   - component: {fileID: 6853605493713192043}
   - component: {fileID: 5120747960046957715}
-  - component: {fileID: 6311994391481905148}
+  - component: {fileID: -1313528493226617139}
   m_Layer: 10
   m_Name: Box
   m_TagString: Box
@@ -137,7 +137,7 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 1
---- !u!114 &6311994391481905148
+--- !u!114 &-1313528493226617139
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -146,11 +146,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7047925024705197179}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f56eddef73970f498fd57ed676e1ada, type: 3}
+  m_Script: {fileID: 11500000, guid: ab394871350a68c4789c39a4a8f1f107, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 5120747960046957715}
   lockable: 1
+  meshRenderer: {fileID: 9009798178178383813}
   materialDefault: {fileID: 2100000, guid: d76d5dba59c8a824a8170635648a356c, type: 2}
   materialLockHider: {fileID: 2100000, guid: 0f29e3c1c576f6641b9e474f6b194480, type: 2}
   materialLockSeeker: {fileID: 2100000, guid: a4b62a69d54e80347bd546999c6d4b9e, type: 2}

@@ -1,15 +1,11 @@
-using System;
-using System.Buffers;
-using JetBrains.Annotations;
-using Unity.MLAgents;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Interactable : MonoBehaviour
 {
     // Serialized fields for setting in the Unity editor
     [SerializeField] private  Rigidbody rb = null;
     [SerializeField] private  bool lockable = true;
+    [SerializeField] private MeshRenderer meshRenderer = null;
     [SerializeField] private Material materialDefault = null;
     [SerializeField] private Material materialLockHider = null;
     [SerializeField] private Material materialLockSeeker = null;
@@ -18,25 +14,14 @@ public class Interactable : MonoBehaviour
     [SerializeField] private string tagLockSeeker = "";
 
     // Private fields for internal use
-    private MeshRenderer meshRenderer = null;
     private AgentActions owner = null;
     private AgentActions lockOwner = null;
     private Vector3 startPosition;
-    private Quaternion startRotation;
 
     // Public properties for accessing private fields
     public AgentActions Owner { get { return owner; } }
     public AgentActions LockOwner { get { return lockOwner; } }
     public Rigidbody Rigidbody { get { return rb; } }
-
-    void Start()
-    {
-        // Initialize meshRenderer and store the initial position and rotation
-        meshRenderer = GetComponent<MeshRenderer>();
-        startPosition = transform.position;
-        startRotation = transform.rotation;
-        
-    }
 
     // Method to lock or unlock the interactable object
     public void TryLockUnlock(AgentActions agent, bool tryLock)
@@ -96,11 +81,10 @@ public class Interactable : MonoBehaviour
         owner = null;
         lockOwner = null;
         tag = tagDefault;
-        //rb.isKinematic = true;
+        rb.isKinematic = false;
         meshRenderer.material = materialDefault;
-        transform.position = startPosition;
-        transform.rotation = startRotation;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+        gameObject.SetActive(true);
     }
 }

@@ -63,7 +63,7 @@ public class MapGenerator : MonoBehaviour
     public List<Interactable> GetInstantiatedBoxes() => boxes.ToList();
     public List<Interactable> GetInstantiatedRamps() => ramps.ToList();
 
-    public void Initialize()
+    public void Awake()
     {
         // Initialize agents and interactables
         hiders = Enumerable.Range(0, numHidersMax).Select(_ => Instantiate(hiderPrefab, agentParent)).ToArray();
@@ -193,45 +193,25 @@ public class MapGenerator : MonoBehaviour
         //Find place for hiders
         for (int i = 0; i < NumHiders; i++)
         {
-            if (!TryPlaceObject(itemPlacement, PickPointHider, agentRadius, numTriesAgent))
-            {
-                // When this happens, the training breaks
-                Debug.LogError("Couldn't randomize agent placement");
-                return;
-            }
+            TryPlaceObject(itemPlacement, PickPointHider, agentRadius, numTriesAgent);
         }
 
         //Find place for seekers
         for (int i = 0; i < NumSeekers; i++)
         {
-            if (!TryPlaceObject(itemPlacement, PickPointSeeker, agentRadius, numTriesAgent))
-            {
-                // When this happens, the training breaks
-                Debug.LogError("Couldn't randomize agent placement");
-                return;
-            }
+            TryPlaceObject(itemPlacement, PickPointSeeker, agentRadius, numTriesAgent);
         }
 
         //Find place for Boxes
         for (int i = 0; i < NumBoxes; i++)
         {
-            if (!TryPlaceObject(itemPlacement, PickPointBox, objectRadius, numTriesBox))
-            {
-                // When this happens, the training breaks
-                Debug.LogWarning("Couldn't randomize box placement");
-                break;
-            }
+            TryPlaceObject(itemPlacement, PickPointBox, objectRadius, numTriesBox);
         }
 
         //Find place for Ramps
         for (int i = 0; i < NumRamps; i++)
         {
-            if (!TryPlaceObject(itemPlacement, PickPointRamp, objectRadius, numTriesRamp))
-            {
-                // When this happens, the training breaks
-                Debug.LogWarning("Couldn't randomize ramp placement");
-                break;
-            }
+           TryPlaceObject(itemPlacement, PickPointRamp, objectRadius, numTriesRamp);
         }
 
         //Set position and random rotation of hiders

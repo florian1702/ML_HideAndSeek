@@ -231,13 +231,13 @@ MonoBehaviour:
   moveSpeed: 5
   airMultiplier: 0.2
   rotationSpeed: 360
-  groundDrag: 6
-  airDrag: 2
+  groundDrag: 0.3
+  airDrag: 1
   groundCheck: {fileID: 5936085238757818539}
   groundMask:
     serializedVersion: 2
     m_Bits: 1800
-  groundDistance: 0.5
+  groundDistance: 0.1
   playerHeight: 2
   grabDistance: 2.5
   holdBreakDistance: 4

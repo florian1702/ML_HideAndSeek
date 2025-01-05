@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // Initialize map and agents and interactables
-        mapGenerator.Initialize();
+        //mapGenerator.Initialize();
 
         hiderInstances = mapGenerator.GetInstantiatedHiders();
         seekerInstances = mapGenerator.GetInstantiatedSeekers();
@@ -88,9 +88,9 @@ public class GameManager : MonoBehaviour
         
         // Initialize stats recorder
         statsRecorder = Academy.Instance.StatsRecorder;
-        
+        Academy.Instance.OnEnvironmentReset += ResetScene;
         // Reset the scene
-        ResetScene();
+        //ResetScene();
     }
 
     private void Update()

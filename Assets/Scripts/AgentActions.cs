@@ -6,16 +6,16 @@ public class AgentActions : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private float moveSpeed = 1f;
-    [SerializeField] float airMultiplier = 0.4f;
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] float airMultiplier = 0.2f;
     [SerializeField] private float rotationSpeed = 360f;
-    [SerializeField] float groundDrag = 6f;
-    [SerializeField] float airDrag = 2f;
+    [SerializeField] float groundDrag = 10f;
+    [SerializeField] float airDrag = 1f;
 
     [Header("Ground Detection")]
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask groundMask;
-    [SerializeField] float groundDistance = 0.2f;
+    [SerializeField] float groundDistance = 0.1f;
     [SerializeField] float playerHeight = 2f;
     public bool isGrounded { get; private set; }
 
@@ -66,7 +66,7 @@ public class AgentActions : MonoBehaviour
         moveDirection = direction.x * transform.right + direction.y * transform.forward;
 
 
-        if (isGrounded)
+       if (isGrounded)
         {
             if (OnSlope())
             {
@@ -82,12 +82,19 @@ public class AgentActions : MonoBehaviour
         }
         else
         {
-            // Airborne movement with stronger gravity pull
+            // Airborne: Reduce horizontal velocity faster
+            Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            rb.linearVelocity -= horizontalVelocity * Time.fixedDeltaTime * 5f; // Increased damping rate for faster reduction
+
+            // Apply reduced airborne movement force
             rb.AddForce(moveDirection.normalized * moveSpeed * airMultiplier, ForceMode.Force);
-            rb.AddForce(Vector3.down * (Physics.gravity.y * -1.5f), ForceMode.Acceleration);
+
+            // Stronger downward force to push to ground
+            rb.AddForce(Vector3.down * (Physics.gravity.y * -6f), ForceMode.Acceleration); // Increase downward force
         }
 
-       
+
+            
 
     }
     void ControlDrag()
@@ -95,7 +102,10 @@ public class AgentActions : MonoBehaviour
         // Adjust drag based on whether the agent is grounded
         if (isGrounded)
         {
-            rb.linearDamping = groundDrag;
+            // Additional movement drag
+            Vector3 currentVel = new Vector3(rb.linearVelocity.x, Mathf.Max(0f, rb.linearVelocity.y), rb.linearVelocity.z);
+            Vector3 dragForce = -currentVel * groundDrag;
+            rb.AddForce(dragForce, ForceMode.Impulse);
         }
         else
         {

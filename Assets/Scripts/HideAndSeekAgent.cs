@@ -45,7 +45,6 @@ public class HideAndSeekAgent : Agent
     {
         foreach (var entity in entities)
         {
-            Debug.Log("Checking " + entity.gameObject.name);
             if (AgentSeesEntity(entity.gameObject, out RaycastHit hit))
             {
                 float[] obs = new float[10];
@@ -136,7 +135,6 @@ public class HideAndSeekAgent : Agent
         if (Vector3.Angle(direction, transform.forward) > agentActions.GameManager.ConeAngle)
         {
             hit = new RaycastHit();
-            Debug.Log(false);
             return false;
         }
 
@@ -145,11 +143,9 @@ public class HideAndSeekAgent : Agent
         {
             if (hit.collider.gameObject == entity)
             {
-                Debug.Log(true);
                 return true;
             }
         }
-        Debug.Log(false);
         return false;
     }
 

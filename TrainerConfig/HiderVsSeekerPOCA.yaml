@@ -2,8 +2,8 @@ behaviors:
   Hider:
     trainer_type: poca
     hyperparameters:
-      batch_size: 64000
-      buffer_size: 320000
+      batch_size: 16000
+      buffer_size: 160000
       learning_rate: 0.0003
       beta: 0.01
       epsilon: 0.2
@@ -20,9 +20,6 @@ behaviors:
       extrinsic:
         gamma: 0.999
         strength: 1.0
-      curiosity: 
-        gamma: 0.99
-        strength: 0.1
     keep_checkpoints: 100
     checkpoint_interval: 2500000
     max_steps: 30000000
@@ -39,8 +36,8 @@ behaviors:
   Seeker:
     trainer_type: poca
     hyperparameters:
-      batch_size: 64000
-      buffer_size: 320000
+      batch_size: 16000
+      buffer_size: 160000
       learning_rate: 0.0003
       beta: 0.01
       epsilon: 0.2
@@ -57,9 +54,6 @@ behaviors:
       extrinsic:
         gamma: 0.999
         strength: 1.0
-      curiosity: 
-        gamma: 0.99
-        strength: 0.1
     keep_checkpoints: 100
     checkpoint_interval: 2500000
     max_steps: 30000000

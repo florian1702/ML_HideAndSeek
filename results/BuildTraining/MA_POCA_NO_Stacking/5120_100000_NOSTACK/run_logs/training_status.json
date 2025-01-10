@@ -1,0 +1,53 @@
+{
+    "Seeker": {
+        "elo": 1136.959534676358,
+        "checkpoints": [
+            {
+                "steps": 52000,
+                "file_path": "results\\BuildTraining/MA_POCA_NO_Stacking/5120_100000_NOSTACK\\Seeker\\Seeker-52000.onnx",
+                "reward": -0.15384615384615385,
+                "creation_time": 1736161758.710538,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA_NO_Stacking/5120_100000_NOSTACK\\Seeker\\Seeker-52000.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 52000,
+            "file_path": "results\\BuildTraining/MA_POCA_NO_Stacking/5120_100000_NOSTACK\\Seeker.onnx",
+            "reward": -0.15384615384615385,
+            "creation_time": 1736161758.710538,
+            "auxillary_file_paths": [
+                "results\\BuildTraining/MA_POCA_NO_Stacking/5120_100000_NOSTACK\\Seeker\\Seeker-52000.pt"
+            ]
+        }
+    },
+    "Hider": {
+        "elo": 1200.0,
+        "checkpoints": [
+            {
+                "steps": 0,
+                "file_path": "results\\BuildTraining/MA_POCA_NO_Stacking/5120_100000_NOSTACK\\Hider\\Hider-0.onnx",
+                "reward": null,
+                "creation_time": 1736161759.1717527,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA_NO_Stacking/5120_100000_NOSTACK\\Hider\\Hider-0.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 0,
+            "file_path": "results\\BuildTraining/MA_POCA_NO_Stacking/5120_100000_NOSTACK\\Hider.onnx",
+            "reward": null,
+            "creation_time": 1736161759.1717527,
+            "auxillary_file_paths": [
+                "results\\BuildTraining/MA_POCA_NO_Stacking/5120_100000_NOSTACK\\Hider\\Hider-0.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.5.1+cu124"
+    }
+}

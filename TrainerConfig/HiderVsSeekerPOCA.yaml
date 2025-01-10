@@ -2,8 +2,8 @@ behaviors:
   Hider:
     trainer_type: poca
     hyperparameters:
-      batch_size: 16000
-      buffer_size: 160000
+      batch_size: 5120
+      buffer_size: 100000
       learning_rate: 0.0003
       beta: 0.01
       epsilon: 0.2
@@ -36,8 +36,8 @@ behaviors:
   Seeker:
     trainer_type: poca
     hyperparameters:
-      batch_size: 16000
-      buffer_size: 160000
+      batch_size: 5120
+      buffer_size: 100000
       learning_rate: 0.0003
       beta: 0.01
       epsilon: 0.2

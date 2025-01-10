@@ -34,7 +34,7 @@
 ## About The Project
 <div align="center">
   
-[![HideAndSeek YouTube Video](https://img.youtube.com/vi/f24T2kjb95s/0.jpg)](https://youtu.be/H3wisze4wLE)
+[![HideAndSeek YouTube Video](https://img.youtube.com/vi/H3wisze4wLE/0.jpg)](https://youtu.be/H3wisze4wLE)
 
 Multi-agent hide-and-seek inspired by OpenAI. Utilizing Unity and the ML-Agents toolkit, the project focuses on creating intelligent agents that learn and adapt their strategies over time through reinforcement learning. 
 The seekers will enhance their detection skills while the hiders develop clever tactics to evade capture.

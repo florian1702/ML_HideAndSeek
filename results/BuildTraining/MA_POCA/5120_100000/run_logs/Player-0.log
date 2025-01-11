@@ -11,8 +11,8 @@ NullGfxDevice:
     Renderer: Null Device
     Vendor:   Unity Technologies
 Begin MonoManager ReloadAssembly
-- Loaded All Assemblies, in  5.755 seconds
-- Finished resetting the current domain, in  0.005 seconds
+- Loaded All Assemblies, in  5.863 seconds
+- Finished resetting the current domain, in  0.003 seconds
 [Physics::Module] Selected backend.
 [Physics::Module] Name: PhysX
 [Physics::Module] Id: 0xf2b8ea05
@@ -64,7 +64,7 @@ ERROR: Shader Universal Render Pipeline/Lit shader is not supported on this GPU 
 WARNING: Shader Unsupported: 'Universal Render Pipeline/Lit' - All subshaders removed
 WARNING: Shader Did you use #pragma only_renderers and omit this platform?
 WARNING: Shader If subshaders removal was intentional, you may have forgotten turning Fallback off?
-UnloadTime: 2.001500 ms
+UnloadTime: 2.065200 ms
 Registered Communicator in Agent.
 NullReferenceException: Object reference not set to an instance of an object
   at GameManager.FixedUpdate () [0x00014] in <26bc5fb96a1448dea88bbfb529b10820>:0 
@@ -81,7 +81,5 @@ NullReferenceException: Object reference not set to an instance of an object
 NullReferenceException: Object reference not set to an instance of an object
   at GameManager.FixedUpdate () [0x00014] in <26bc5fb96a1448dea88bbfb529b10820>:0 
 
-Internal: deleting an allocation that is older than its permitted lifetime of 4 frames (age = 5)
-Unable to save timers to file D:/Projects/ML_HideAndSeek/Builds/MA_POCA/ML_HideAndSeek_Data\ML-Agents\Timers\Training_timers.json
 [Physics::Module] Cleanup current backned.
 [Physics::Module] Id: 0xf2b8ea05

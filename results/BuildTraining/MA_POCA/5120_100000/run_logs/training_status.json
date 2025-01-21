@@ -135,16 +135,124 @@
                 "auxillary_file_paths": [
                     "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-25327000.pt"
                 ]
+            },
+            {
+                "steps": 27499900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-27499900.onnx",
+                "reward": 0.0,
+                "creation_time": 1736610192.6395383,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-27499900.pt"
+                ]
+            },
+            {
+                "steps": 29999900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-29999900.onnx",
+                "reward": 0.0,
+                "creation_time": 1736622505.1968887,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-29999900.pt"
+                ]
+            },
+            {
+                "steps": 30001000,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-30001000.onnx",
+                "reward": 0.0,
+                "creation_time": 1736622506.2269742,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-30001000.pt"
+                ]
+            },
+            {
+                "steps": 32002000,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-32002000.onnx",
+                "reward": 0.0,
+                "creation_time": 1736629386.693571,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-32002000.pt"
+                ]
+            },
+            {
+                "steps": 32499900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-32499900.onnx",
+                "reward": 0.0,
+                "creation_time": 1736878908.6919374,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-32499900.pt"
+                ]
+            },
+            {
+                "steps": 34003000,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-34003000.onnx",
+                "reward": 0.0,
+                "creation_time": 1736887822.8765802,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-34003000.pt"
+                ]
+            },
+            {
+                "steps": 34999900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-34999900.onnx",
+                "reward": -1.8430034129692834,
+                "creation_time": 1737377800.650315,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-34999900.pt"
+                ]
+            },
+            {
+                "steps": 37499900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-37499900.onnx",
+                "reward": -1.4054927302100162,
+                "creation_time": 1737390578.4516802,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-37499900.pt"
+                ]
+            },
+            {
+                "steps": 39999900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-39999900.onnx",
+                "reward": -0.2981029810298103,
+                "creation_time": 1737403000.5499494,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-39999900.pt"
+                ]
+            },
+            {
+                "steps": 40138000,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-40138000.onnx",
+                "reward": -2.918918918918919,
+                "creation_time": 1737408882.683706,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-40138000.pt"
+                ]
+            },
+            {
+                "steps": 42499900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-42499900.onnx",
+                "reward": null,
+                "creation_time": 1737480896.742781,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-42499900.pt"
+                ]
+            },
+            {
+                "steps": 42514900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-42514900.onnx",
+                "reward": 0.0,
+                "creation_time": 1737480928.3527813,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-42514900.pt"
+                ]
             }
         ],
-        "elo": 1471.5409279111257,
+        "elo": 1559.9321777727969,
         "final_checkpoint": {
-            "steps": 25327000,
+            "steps": 42514900,
             "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Hider.onnx",
             "reward": 0.0,
-            "creation_time": 1736545031.9673696,
+            "creation_time": 1737480928.3527813,
             "auxillary_file_paths": [
-                "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-25327000.pt"
+                "results\\BuildTraining/MA_POCA/5120_100000\\Hider\\Hider-42514900.pt"
             ]
         }
     },
@@ -284,16 +392,106 @@
                 "auxillary_file_paths": [
                     "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-26428000.pt"
                 ]
+            },
+            {
+                "steps": 27499900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-27499900.onnx",
+                "reward": 0.0,
+                "creation_time": 1736607134.162112,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-27499900.pt"
+                ]
+            },
+            {
+                "steps": 29999900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-29999900.onnx",
+                "reward": 0.0,
+                "creation_time": 1736619633.3060038,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-29999900.pt"
+                ]
+            },
+            {
+                "steps": 30430000,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-30430000.onnx",
+                "reward": -0.004282655246252677,
+                "creation_time": 1736622506.7118413,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-30430000.pt"
+                ]
+            },
+            {
+                "steps": 30761000,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-30761000.onnx",
+                "reward": -1.4642857142857142,
+                "creation_time": 1736629387.2108235,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-30761000.pt"
+                ]
+            },
+            {
+                "steps": 32499900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-32499900.onnx",
+                "reward": 0.0,
+                "creation_time": 1736876721.2155802,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-32499900.pt"
+                ]
+            },
+            {
+                "steps": 33892000,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-33892000.onnx",
+                "reward": null,
+                "creation_time": 1736887822.2658012,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-33892000.pt"
+                ]
+            },
+            {
+                "steps": 34999900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-34999900.onnx",
+                "reward": 0.0,
+                "creation_time": 1737383743.731607,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-34999900.pt"
+                ]
+            },
+            {
+                "steps": 37499900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-37499900.onnx",
+                "reward": 0.0,
+                "creation_time": 1737396399.20724,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-37499900.pt"
+                ]
+            },
+            {
+                "steps": 39895000,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-39895000.onnx",
+                "reward": -0.47619047619047616,
+                "creation_time": 1737408883.233212,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-39895000.pt"
+                ]
+            },
+            {
+                "steps": 44999900,
+                "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-44999900.onnx",
+                "reward": null,
+                "creation_time": 1737480928.8537312,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-44999900.pt"
+                ]
             }
         ],
-        "elo": 1715.2624057098062,
+        "elo": 1768.279692426211,
         "final_checkpoint": {
-            "steps": 26428000,
+            "steps": 44999900,
             "file_path": "results\\BuildTraining/MA_POCA/5120_100000\\Seeker.onnx",
-            "reward": 0.0,
-            "creation_time": 1736545031.3830512,
+            "reward": null,
+            "creation_time": 1737480928.8537312,
             "auxillary_file_paths": [
-                "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-26428000.pt"
+                "results\\BuildTraining/MA_POCA/5120_100000\\Seeker\\Seeker-44999900.pt"
             ]
         }
     },

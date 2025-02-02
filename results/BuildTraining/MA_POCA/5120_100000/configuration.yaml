@@ -3,7 +3,7 @@ behaviors:
   Hider:
     trainer_type: poca
     hyperparameters:
-      batch_size: 5120
+      batch_size: 20000
       buffer_size: 100000
       learning_rate: 0.0003
       beta: 0.01
@@ -37,7 +37,7 @@ behaviors:
     init_path: null
     keep_checkpoints: 100
     even_checkpoints: false
-    max_steps: 100000000
+    max_steps: 75000000
     time_horizon: 500
     summary_freq: 100000
     threaded: false
@@ -52,7 +52,7 @@ behaviors:
   Seeker:
     trainer_type: poca
     hyperparameters:
-      batch_size: 5120
+      batch_size: 20000
       buffer_size: 100000
       learning_rate: 0.0003
       beta: 0.01
@@ -86,7 +86,7 @@ behaviors:
     init_path: null
     keep_checkpoints: 100
     even_checkpoints: false
-    max_steps: 100000000
+    max_steps: 75000000
     time_horizon: 500
     summary_freq: 100000
     threaded: false
@@ -102,7 +102,7 @@ env_settings:
   env_path: Builds/MA_POCA/ML_HideAndSeek.exe
   env_args: null
   base_port: 5005
-  num_envs: 4
+  num_envs: 2
   num_areas: 5
   timeout_wait: 60
   seed: -1

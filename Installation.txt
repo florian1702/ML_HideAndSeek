@@ -13,5 +13,11 @@ mlagents-learn --help				to check if everything is correct
 pip install protobuf==3.20.3			most likely you have to install protobuf too
 tensorboard --logdir results  			to see visualization of the result on http://localhost:6006/
 
-mlagents-learn TrainerConfig/HideAndSeek.yaml --force --run-id=Test1		run tr
-mlagents-learn TrainerConfig/HiderVsSeekerPOCA.yaml --num-areas=20 --num-envs=5 --env=Builds/MA_POCA/ML_HideAndSeek.exe --time-scale=1 --no-graphics --run-id=BuildTraining/MA_POCA/Training1
+
+_____________MA-POCA_____________
+
+mlagents-learn TrainerConfig/HiderVsSeekerPOCA.yaml --num-areas=5 --num-envs=4 --env=Builds/MA_POCA/ML_HideAndSeek.exe --time-scale=1 --no-graphics --run-id=BuildTraining/MA_POCA/5120_100000 --resume
+
+_______________PPO_______________
+
+mlagents-learn TrainerConfig/HiderVsSeekerPPO.yaml --num-areas=5 --num-envs=4 --env=Builds/PPO/ML_HideAndSeek.exe --time-scale=1 --no-graphics --run-id=BuildTraining/PPO/5120_100000 --resume

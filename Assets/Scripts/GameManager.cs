@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Rules")]
     [SerializeField] private List<RewardInfo> rewards = null;
-    [SerializeField] private float arenaSize = 20f;
+    [SerializeField] private float arenaSize = 25f;
 
     [Header("Debug")]
     [SerializeField] private bool debugDrawBoxHold = true;
@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
 
     private int stepsHidden = 0;
     private StatsRecorder statsRecorder = null;
+
+    public float ArenaSize{ get { return arenaSize; } }
 
     public bool PreparationPhaseEnded
     {

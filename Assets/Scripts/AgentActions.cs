@@ -7,37 +7,37 @@ public class AgentActions : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private Rigidbody rb;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] float airMultiplier = 0.2f;
+    [SerializeField] private float airMultiplier = 0.2f;
     [SerializeField] private float rotationSpeed = 360f;
-    [SerializeField] float groundDrag = 10f;
-    [SerializeField] float airDrag = 1f;
+    [SerializeField] private float groundDrag = 10f;
+    [SerializeField] private float airDrag = 1f;
 
     [Header("Ground Detection")]
-    [SerializeField] Transform groundCheck;
-    [SerializeField] LayerMask groundMask;
-    [SerializeField] float groundDistance = 0.1f;
-    [SerializeField] float playerHeight = 2f;
-    public bool isGrounded { get; private set; }
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private float groundDistance = 0.1f;
+    [SerializeField] private float playerHeight = 2f;
 
     [Header("Interacting")]
     [SerializeField] private float grabDistance = 2.5f;
-    [SerializeField] private float holdBreakDistance = 4f;
+    [SerializeField] private float breakDistace = 4f;
     
     private Vector2 movementInput = Vector2.zero;
-
-    Vector3 moveDirection;
-    Vector3 slopeMoveDirection;
+    private Vector3 moveDirection;
+    private Vector3 slopeMoveDirection;
     private float rotationInput = 0f;
     private Interactable grabbedInteractable;
     private Quaternion targetRelativeRotation;
+    private RaycastHit slopeHit;
+
     public Rigidbody Rigidbody { get { return rb; } }
     public HideAndSeekAgent HideAndSeekAgent { get { return hideAndSeekAgent; } }
     public bool IsHider { get { return isHider; } }
+    public bool isGrounded { get; private set; }
     public bool IsHolding { get { return grabbedInteractable != null; } }
     public bool IsMoving { get { return rb.linearVelocity.magnitude > 0.1f;  } }
     public GameManager GameManager { get; set; }
 
-    private RaycastHit slopeHit;
    
     void FixedUpdate()
     {
@@ -65,21 +65,20 @@ public class AgentActions : MonoBehaviour
         Vector2 direction = movementInput;
         moveDirection = direction.x * transform.right + direction.y * transform.forward;
 
-
-       if (isGrounded)
-        {
-            if (OnSlope())
+        if (isGrounded)
             {
-                // Adjust for slope movement
-                slopeMoveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
-                rb.AddForce(slopeMoveDirection * moveSpeed, ForceMode.Impulse);
+                if (OnSlope())
+                {
+                    // Adjust for slope movement
+                    slopeMoveDirection = Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
+                    rb.AddForce(slopeMoveDirection * moveSpeed, ForceMode.Impulse);
+                }
+                else
+                {
+                    // Normal ground movement
+                    rb.AddForce(moveDirection.normalized * moveSpeed, ForceMode.Impulse);
+                }
             }
-            else
-            {
-                // Normal ground movement
-                rb.AddForce(moveDirection.normalized * moveSpeed, ForceMode.Impulse);
-            }
-        }
         else
         {
             // Airborne: Reduce horizontal velocity faster
@@ -92,11 +91,8 @@ public class AgentActions : MonoBehaviour
             // Stronger downward force to push to ground
             rb.AddForce(Vector3.down * (Physics.gravity.y * -6f), ForceMode.Acceleration); // Increase downward force
         }
-
-
-            
-
     }
+
     void ControlDrag()
     {
         // Adjust drag based on whether the agent is grounded
@@ -116,8 +112,8 @@ public class AgentActions : MonoBehaviour
     private void Rotation()
     {
         // Apply rotation based on input
-        float delta = rotationInput * rotationSpeed * Time.fixedDeltaTime;
-        rb.MoveRotation(rb.rotation * Quaternion.AngleAxis(delta, Vector3.up));
+        float deltaRotation = rotationInput * rotationSpeed * Time.fixedDeltaTime;
+        rb.MoveRotation(rb.rotation * Quaternion.AngleAxis(deltaRotation, Vector3.up));
     }
 
     private void AdjustGrabbedObject()
@@ -129,28 +125,21 @@ public class AgentActions : MonoBehaviour
             Vector3 towards = targetPosition - grabbedInteractable.Rigidbody.position;
             grabbedInteractable.Rigidbody.linearVelocity = towards * 10f;
 
+             // Adjust rotation using Slerp
             Quaternion targetRotation = transform.rotation * targetRelativeRotation;
-            Vector3 angularTowards = ShortestPathFromTo(grabbedInteractable.transform.rotation, targetRotation);
-            grabbedInteractable.Rigidbody.angularVelocity = angularTowards * 0.1f;
+            grabbedInteractable.transform.rotation = Quaternion.Slerp(
+                grabbedInteractable.transform.rotation, 
+                targetRotation, 
+                Time.fixedDeltaTime * rotationSpeed
+            );
 
             // Release object if it is too far from the agent
-            if (Vector3.Distance(grabbedInteractable.Rigidbody.position, transform.position) > holdBreakDistance)
+            if (Vector3.Distance(grabbedInteractable.Rigidbody.position, transform.position) > breakDistace)
             {
                 grabbedInteractable.Release();
                 grabbedInteractable = null;
             }
         }
-    }
-
-    // Calculates the shortest path rotation from one quaternion to another
-    private Vector3 ShortestPathFromTo(Quaternion from, Quaternion to)
-    {
-        Quaternion q = Quaternion.Inverse(from) * to;
-        Vector3 v = q.eulerAngles;
-        float x = v.x > 180f ? v.x - 360f : v.x;
-        float y = v.y > 180f ? v.y - 360f : v.y;
-        float z = v.z > 180f ? v.z - 360f : v.z;
-        return new Vector3(x, y, z);
     }
 
     // Checks if the agent is on a slope
@@ -198,7 +187,7 @@ public class AgentActions : MonoBehaviour
 
     public void ReleaseInteractable()
     {
-        if (grabbedInteractable != null)
+        if (IsHolding)
         {
             grabbedInteractable.Release();
             grabbedInteractable = null;

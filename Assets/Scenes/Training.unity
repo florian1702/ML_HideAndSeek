@@ -133,7 +133,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: trainer
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawBoxHold
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawVisibility
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawPlayAreaBounds
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawIndividualReward
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2518838290219750159, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: m_LocalPosition.y
@@ -536,7 +552,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: trainer
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawBoxHold
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawVisibility
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawPlayAreaBounds
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawIndividualReward
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2518838290219750159, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: m_LocalPosition.y
@@ -606,7 +638,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: trainer
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawBoxHold
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawVisibility
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawPlayAreaBounds
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawIndividualReward
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2518838290219750159, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: m_LocalPosition.y
@@ -676,7 +724,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: trainer
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawBoxHold
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawVisibility
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawPlayAreaBounds
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawIndividualReward
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2518838290219750159, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -720,7 +784,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: trainer
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawBoxHold
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawVisibility
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawPlayAreaBounds
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
+      propertyPath: debugDrawIndividualReward
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2518838290219750159, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: m_LocalPosition.y

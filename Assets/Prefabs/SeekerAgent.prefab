@@ -158,7 +158,7 @@ Rigidbody:
   m_GameObject: {fileID: 1738357223548764316}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 6
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -224,7 +224,7 @@ MonoBehaviour:
   groundDistance: 0.1
   playerHeight: 2
   grabDistance: 2.5
-  holdBreakDistance: 4
+  breakDistace: 4
 --- !u!114 &3555802377697319519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,7 +247,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: afb38bb038f71814e91fa8dacd301964, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: fe1e1be92a4f09b40b5dbd0e41254546, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: Seeker
@@ -590,7 +590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: SeekerRampsBufferSensor
-  m_ObservableSize: 10
+  m_ObservableSize: 7
   m_MaxNumObservables: 1
 --- !u!1 &6109087468012199508
 GameObject:
@@ -673,7 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: SeekerBoxesBufferSensor
-  m_ObservableSize: 10
+  m_ObservableSize: 7
   m_MaxNumObservables: 2
 --- !u!1 &7905461371425799733
 GameObject:
@@ -720,7 +720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: SeekerTeamBufferSensor
-  m_ObservableSize: 10
+  m_ObservableSize: 7
   m_MaxNumObservables: 2
 --- !u!1 &8643357260696453078
 GameObject:
@@ -767,5 +767,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: SeekerEnemiesBufferSensor
-  m_ObservableSize: 10
+  m_ObservableSize: 7
   m_MaxNumObservables: 2

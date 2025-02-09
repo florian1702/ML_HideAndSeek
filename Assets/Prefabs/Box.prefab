@@ -153,8 +153,8 @@ MonoBehaviour:
   lockable: 1
   meshRenderer: {fileID: 9009798178178383813}
   materialDefault: {fileID: 2100000, guid: d76d5dba59c8a824a8170635648a356c, type: 2}
-  materialLockHider: {fileID: 2100000, guid: 0f29e3c1c576f6641b9e474f6b194480, type: 2}
-  materialLockSeeker: {fileID: 2100000, guid: a4b62a69d54e80347bd546999c6d4b9e, type: 2}
+  materialHider: {fileID: 2100000, guid: 0f29e3c1c576f6641b9e474f6b194480, type: 2}
+  materialSeeker: {fileID: 2100000, guid: a4b62a69d54e80347bd546999c6d4b9e, type: 2}
   tagDefault: Box
-  tagLockHider: Box Hider Lock
-  tagLockSeeker: Box Seeker Lock
+  tagHider: Box Hider Lock
+  tagSeeker: Box Seeker Lock

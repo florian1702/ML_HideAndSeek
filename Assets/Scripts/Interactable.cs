@@ -7,17 +7,16 @@ public class Interactable : MonoBehaviour
     [SerializeField] private  bool lockable = true;
     [SerializeField] private MeshRenderer meshRenderer = null;
     [SerializeField] private Material materialDefault = null;
-    [SerializeField] private Material materialLockHider = null;
-    [SerializeField] private Material materialLockSeeker = null;
+    [SerializeField] private Material materialHider = null;
+    [SerializeField] private Material materialSeeker = null;
     [SerializeField] private string tagDefault = "";
-    [SerializeField] private string tagLockHider = "";
-    [SerializeField] private string tagLockSeeker = "";
+    [SerializeField] private string tagHider = "";
+    [SerializeField] private string tagSeeker = "";
 
     // Private fields for internal use
     private AgentActions owner = null;
     private AgentActions lockOwner = null;
     private Vector3 startPosition;
-    private Quaternion startRotation;
 
 
     // Public properties for accessing private fields
@@ -27,11 +26,8 @@ public class Interactable : MonoBehaviour
 
     void Awake()
     {
-        // Initialize meshRenderer and store the initial position and rotation
         meshRenderer = GetComponent<MeshRenderer>();
         startPosition = transform.position;
-        startRotation = transform.rotation;
-        
     }
 
     // Method to lock or unlock the interactable object
@@ -47,8 +43,8 @@ public class Interactable : MonoBehaviour
                     owner?.ReleaseInteractable();
                     owner = null;
                     lockOwner = agent;
-                    meshRenderer.material = agent.IsHider ? materialLockHider : materialLockSeeker;
-                    tag = agent.IsHider ? tagLockHider : tagLockSeeker;
+                    meshRenderer.material = agent.IsHider ? materialHider : materialSeeker;
+                    tag = agent.IsHider ? tagHider : tagSeeker;
                 }
             }
             else

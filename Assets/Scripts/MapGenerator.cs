@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 public class MapGenerator : MonoBehaviour
 {
-    [SerializeField] private float mapSize = 20f; // controls where objects are randomized
+    [SerializeField] private float mapSize = 25f;
     [SerializeField] private GameObject wallPrefab = null;
     [SerializeField] private Transform wallsParent = null;
     [SerializeField] private float wallY = 1f;
@@ -15,14 +15,13 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private GameObject floorGameObject = null;
 
     [Header("Agent placement")]
-    // instantiateAgents must be on if agent count should be randomized every episode
     [SerializeField] private Transform agentParent = null;
     [SerializeField] private AgentActions hiderPrefab = null;
     [SerializeField] private AgentActions seekerPrefab = null;
-    [SerializeField] private int numHidersMin = 3;
-    [SerializeField] private int numHidersMax = 3;
-    [SerializeField] private int numSeekersMin = 3;
-    [SerializeField] private int numSeekersMax = 3;
+    [SerializeField] private int numHidersMin = 2;
+    [SerializeField] private int numHidersMax = 2;
+    [SerializeField] private int numSeekersMin = 2;
+    [SerializeField] private int numSeekersMax = 2;
     [SerializeField] private float agentY = 1f;
     [SerializeField] private float agentRadius = 0.75f;
 
@@ -92,7 +91,7 @@ public class MapGenerator : MonoBehaviour
         }
 
         //Place Agents and Interactables
-        PlaceStuff();
+        PlaceAgentsAndInteractables();
     }
 
     // Generates the main room with walls
@@ -178,7 +177,7 @@ public class MapGenerator : MonoBehaviour
 
 
     // Places agents and interactables on the map
-    private void PlaceStuff()
+    private void PlaceAgentsAndInteractables()
     {
         // List of all positions and radius
         List<(Vector2, float)> itemPlacement = new List<(Vector2, float)>();

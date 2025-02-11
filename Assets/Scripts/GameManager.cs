@@ -6,32 +6,32 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int episodeSteps = 240;
+    [Header("Configuration")]
+    [SerializeField] private Trainer trainer = Trainer.PPO;
+    [SerializeField] private int episodeSteps = 500;
     [SerializeField] private float preparationPhaseFraction = 0.4f;
     [SerializeField] private float coneAngle = 67.5f;
     [SerializeField] private MapGenerator mapGenerator = null;
-    [SerializeField] private Trainer trainer = Trainer.PPO;
 
     [Serializable]
-    public struct RewardInfo
+    public struct Reward
     {
-        public enum Type { VisibilityTeam, OobPenalty };
+        public enum Type { VisibilityTeam, OutsideArenaPenalty };
         public Type type;
-        public float weight;
+        public float value;
     };
 
     public enum Trainer { PPO, MA_POCA };
 
-
     [Header("Game Rules")]
-    [SerializeField] private List<RewardInfo> rewards = null;
+    [SerializeField] private List<Reward> rewards = null;
     [SerializeField] private float arenaSize = 25f;
 
     [Header("Debug")]
-    [SerializeField] private bool debugDrawBoxHold = true;
-    [SerializeField] private bool debugDrawVisibility = true;
+    [SerializeField] private bool debugDrawInteractableHolding = true;
+    [SerializeField] private bool debugDrawAgentsFOV = true;
     [SerializeField] private bool debugDrawIndividualReward = true;
-    [SerializeField] private bool debugDrawPlayAreaBounds = true;
+    [SerializeField] private bool debugDrawArenaBounds = true;
 
     private int episodeTimer = 0;
     private List<AgentActions> hiders;
@@ -45,21 +45,18 @@ public class GameManager : MonoBehaviour
     private SimpleMultiAgentGroup hidersGroup;
     private SimpleMultiAgentGroup seekersGroup;
     private bool[,] visibilityMatrix;
-    private bool[] visibilityHiders;
-    private bool[] visibilitySeekers;
     private bool allHidden;
-
     private int stepsHidden = 0;
     private StatsRecorder statsRecorder = null;
 
     public float ArenaSize{ get { return arenaSize; } }
-
+    public float ConeAngle{ get { return coneAngle; } }
+    public bool DebugDrawBoxHold => debugDrawInteractableHolding;
+    public bool DebugDrawIndividualReward => debugDrawIndividualReward;
     public bool PreparationPhaseEnded
     {
         get { return episodeTimer >= episodeSteps * preparationPhaseFraction; }
     }
-
-    public float ConeAngle{ get { return coneAngle; } }
     public float TimeLeftInPreparationPhase
     {
         get 
@@ -70,14 +67,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public bool DebugDrawBoxHold => debugDrawBoxHold;
-    public bool DebugDrawIndividualReward => debugDrawIndividualReward;
-
     private void Start()
     {
-        // Initialize map and agents and interactables
-        //mapGenerator.Initialize();
-
         hiderInstances = mapGenerator.GetInstantiatedHiders();
         seekerInstances = mapGenerator.GetInstantiatedSeekers();
         boxInstances = mapGenerator.GetInstantiatedBoxes();
@@ -91,14 +82,12 @@ public class GameManager : MonoBehaviour
         // Initialize stats recorder
         statsRecorder = Academy.Instance.StatsRecorder;
         Academy.Instance.OnEnvironmentReset += ResetScene;
-        // Reset the scene
-        //ResetScene();
     }
 
     private void Update()
     {
-        // Manuelly reset scene on 'P' key press for debugging
-        if (Input.GetKeyDown(KeyCode.P))
+        // Manuelly reset scene on 'Space' key press for debugging
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             ResetScene();
         }
@@ -245,8 +234,6 @@ public class GameManager : MonoBehaviour
         }
 
         visibilityMatrix = new bool[hiders.Count, seekers.Count];
-        visibilityHiders = new bool[hiders.Count];
-        visibilitySeekers = new bool[seekers.Count];
         allHidden = false;
     }
 
@@ -274,8 +261,6 @@ public class GameManager : MonoBehaviour
     private void FillVisibilityMatrix()
     {
         allHidden = true;
-        Array.Fill(visibilityHiders, false);
-        Array.Fill(visibilitySeekers, false);
 
         // Update visibility matrix
         for (int i = 0; i < hiders.Count; i++)
@@ -285,8 +270,6 @@ public class GameManager : MonoBehaviour
                 if (AgentSeesAgent(seekers[j], hiders[i], out RaycastHit hit))
                 {
                     visibilityMatrix[i, j] = true;
-                    visibilityHiders[i] = true;
-                    visibilitySeekers[j] = true;
                     allHidden = false;
                 }
                 else
@@ -300,13 +283,13 @@ public class GameManager : MonoBehaviour
     private void UpdateRewards()
     {
         // Update rewards based on visibility and out-of-bounds penalties
-        foreach (RewardInfo rewardInfo in rewards)
+        foreach (Reward rewardInfo in rewards)
         {
             switch (rewardInfo.type)
             {
-                case RewardInfo.Type.VisibilityTeam:
+                case Reward.Type.VisibilityTeam:
                     if (!PreparationPhaseEnded) break;
-                    float teamReward = allHidden ? rewardInfo.weight : -rewardInfo.weight;
+                    float teamReward = allHidden ? rewardInfo.value : -rewardInfo.value;
                     //Add reward to hiders and penalty to seekers as a group when MA-POCA is used
                     if(trainer == Trainer.MA_POCA)
                     {
@@ -322,32 +305,31 @@ public class GameManager : MonoBehaviour
                     
                     break;
 
-                case RewardInfo.Type.OobPenalty:
-                    foreach (AgentActions hider in hiders.Where((AgentActions agent) => IsOoB(agent)))
+                case Reward.Type.OutsideArenaPenalty:
+                    foreach (AgentActions hider in hiders.Where((AgentActions agent) => IsOutsideArena(agent)))
                     {
-                        hider.HideAndSeekAgent.AddReward(-rewardInfo.weight);
+                        hider.HideAndSeekAgent.AddReward(-rewardInfo.value);
                     }
-                    foreach (AgentActions seeker in seekers.Where((AgentActions agent) => IsOoB(agent)))
+                    foreach (AgentActions seeker in seekers.Where((AgentActions agent) => IsOutsideArena(agent)))
                     {
-                        seeker.HideAndSeekAgent.AddReward(-rewardInfo.weight);
+                        seeker.HideAndSeekAgent.AddReward(-rewardInfo.value);
                     }
                     break;
             }
         }
     }
 
-    // Checks if agent is out of bounds
-    private bool IsOoB(AgentActions agent)
+    // Checks if agent is outside arena
+    private bool IsOutsideArena(AgentActions agent)
     {
         return Mathf.Max(Mathf.Abs(agent.transform.position.x - transform.position.x),
                          Mathf.Abs(agent.transform.position.z - transform.position.z)) > arenaSize * 0.5f;
     }
 
-
     private void OnDrawGizmos()
     {
         // Draw visibility field of view for seekers
-        if (debugDrawVisibility)
+        if (debugDrawAgentsFOV)
         {
             if(seekers != null){
                 foreach (var agent in seekers){
@@ -356,18 +338,24 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // Draw play area bounds
-        if (debugDrawPlayAreaBounds)
+        // Draw Arena bounds
+        if (debugDrawArenaBounds)
         {
-            Vector3 center = transform.position;
-            Color c = Gizmos.color;
-            Gizmos.color = new Color(0.3f, 1f, 0.3f, 0.5f);
-            Gizmos.DrawCube(center + new Vector3(-arenaSize * 0.5f, 1f, 0f), new Vector3(0.25f, 2f, arenaSize));
-            Gizmos.DrawCube(center + new Vector3(+arenaSize * 0.5f, 1f, 0f), new Vector3(0.25f, 2f, arenaSize));
-            Gizmos.DrawCube(center + new Vector3(0f, 1f, -arenaSize * 0.5f), new Vector3(arenaSize, 2f, 0.25f));
-            Gizmos.DrawCube(center + new Vector3(0f, 1f, +arenaSize * 0.5f), new Vector3(arenaSize, 2f, 0.25f));
-            Gizmos.color = c;
+            DrawArenaBounds();
         }
+    }
+
+    // Draws the arena bounds
+    private void DrawArenaBounds()
+    {
+        Vector3 center = transform.position;
+        Color c = Gizmos.color;
+        Gizmos.color = new Color(0.3f, 1f, 0.3f, 0.5f);
+        Gizmos.DrawCube(center + new Vector3(-arenaSize * 0.5f, 1f, 0f), new Vector3(0.25f, 2f, arenaSize));
+        Gizmos.DrawCube(center + new Vector3(+arenaSize * 0.5f, 1f, 0f), new Vector3(0.25f, 2f, arenaSize));
+        Gizmos.DrawCube(center + new Vector3(0f, 1f, -arenaSize * 0.5f), new Vector3(arenaSize, 2f, 0.25f));
+        Gizmos.DrawCube(center + new Vector3(0f, 1f, +arenaSize * 0.5f), new Vector3(arenaSize, 2f, 0.25f));
+        Gizmos.color = c;
     }
 
     // Draws the field of view (FoV) of an agent

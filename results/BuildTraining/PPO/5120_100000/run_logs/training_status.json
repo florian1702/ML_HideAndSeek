@@ -585,16 +585,25 @@
                 "auxillary_file_paths": [
                     "results\\BuildTraining/PPO/5120_100000\\Hider\\Hider-96379900.pt"
                 ]
+            },
+            {
+                "steps": 97490900,
+                "file_path": "results\\BuildTraining/PPO/5120_100000\\Hider\\Hider-97490900.onnx",
+                "reward": null,
+                "creation_time": 1739273112.740247,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/PPO/5120_100000\\Hider\\Hider-97490900.pt"
+                ]
             }
         ],
-        "elo": 1336.7159027410926,
+        "elo": 1358.9459981839661,
         "final_checkpoint": {
-            "steps": 96379900,
+            "steps": 97490900,
             "file_path": "results\\BuildTraining/PPO/5120_100000\\Hider.onnx",
-            "reward": -0.448,
-            "creation_time": 1739221134.0228317,
+            "reward": null,
+            "creation_time": 1739273112.740247,
             "auxillary_file_paths": [
-                "results\\BuildTraining/PPO/5120_100000\\Hider\\Hider-96379900.pt"
+                "results\\BuildTraining/PPO/5120_100000\\Hider\\Hider-97490900.pt"
             ]
         }
     },
@@ -1157,16 +1166,25 @@
                 "auxillary_file_paths": [
                     "results\\BuildTraining/PPO/5120_100000\\Seeker\\Seeker-87578600.pt"
                 ]
+            },
+            {
+                "steps": 89579600,
+                "file_path": "results\\BuildTraining/PPO/5120_100000\\Seeker\\Seeker-89579600.onnx",
+                "reward": 5.360975609756098,
+                "creation_time": 1739273112.1982398,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/PPO/5120_100000\\Seeker\\Seeker-89579600.pt"
+                ]
             }
         ],
-        "elo": 1513.9903644513772,
+        "elo": 1498.9913474382251,
         "final_checkpoint": {
-            "steps": 87578600,
+            "steps": 89579600,
             "file_path": "results\\BuildTraining/PPO/5120_100000\\Seeker.onnx",
-            "reward": 15.9625,
-            "creation_time": 1739221133.5411658,
+            "reward": 5.360975609756098,
+            "creation_time": 1739273112.1982398,
             "auxillary_file_paths": [
-                "results\\BuildTraining/PPO/5120_100000\\Seeker\\Seeker-87578600.pt"
+                "results\\BuildTraining/PPO/5120_100000\\Seeker\\Seeker-89579600.pt"
             ]
         }
     },

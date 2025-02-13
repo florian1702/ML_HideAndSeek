@@ -3,7 +3,7 @@ behaviors:
   Hider:
     trainer_type: poca
     hyperparameters:
-      batch_size: 20000
+      batch_size: 10000
       buffer_size: 100000
       learning_rate: 0.0003
       beta: 0.01
@@ -15,7 +15,7 @@ behaviors:
       epsilon_schedule: constant
     checkpoint_interval: 2500000
     network_settings:
-      normalize: false
+      normalize: true
       hidden_units: 512
       num_layers: 3
       vis_encode_type: simple
@@ -37,7 +37,7 @@ behaviors:
     init_path: null
     keep_checkpoints: 100
     even_checkpoints: false
-    max_steps: 75000000
+    max_steps: 100000000
     time_horizon: 500
     summary_freq: 100000
     threaded: false
@@ -52,7 +52,7 @@ behaviors:
   Seeker:
     trainer_type: poca
     hyperparameters:
-      batch_size: 20000
+      batch_size: 10000
       buffer_size: 100000
       learning_rate: 0.0003
       beta: 0.01
@@ -64,7 +64,7 @@ behaviors:
       epsilon_schedule: constant
     checkpoint_interval: 2500000
     network_settings:
-      normalize: false
+      normalize: true
       hidden_units: 512
       num_layers: 3
       vis_encode_type: simple
@@ -86,7 +86,7 @@ behaviors:
     init_path: null
     keep_checkpoints: 100
     even_checkpoints: false
-    max_steps: 75000000
+    max_steps: 100000000
     time_horizon: 500
     summary_freq: 100000
     threaded: false

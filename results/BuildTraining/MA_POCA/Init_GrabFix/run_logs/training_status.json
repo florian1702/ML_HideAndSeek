@@ -1,0 +1,53 @@
+{
+    "Seeker": {
+        "elo": 1261.3290158744578,
+        "checkpoints": [
+            {
+                "steps": 46000,
+                "file_path": "results\\BuildTraining/MA_POCA/Init_GrabFix\\Seeker\\Seeker-46000.onnx",
+                "reward": 0.0,
+                "creation_time": 1739467367.2992053,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/Init_GrabFix\\Seeker\\Seeker-46000.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 46000,
+            "file_path": "results\\BuildTraining/MA_POCA/Init_GrabFix\\Seeker.onnx",
+            "reward": 0.0,
+            "creation_time": 1739467367.2992053,
+            "auxillary_file_paths": [
+                "results\\BuildTraining/MA_POCA/Init_GrabFix\\Seeker\\Seeker-46000.pt"
+            ]
+        }
+    },
+    "Hider": {
+        "elo": 1200.0,
+        "checkpoints": [
+            {
+                "steps": 0,
+                "file_path": "results\\BuildTraining/MA_POCA/Init_GrabFix\\Hider\\Hider-0.onnx",
+                "reward": null,
+                "creation_time": 1739467367.7750525,
+                "auxillary_file_paths": [
+                    "results\\BuildTraining/MA_POCA/Init_GrabFix\\Hider\\Hider-0.pt"
+                ]
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 0,
+            "file_path": "results\\BuildTraining/MA_POCA/Init_GrabFix\\Hider.onnx",
+            "reward": null,
+            "creation_time": 1739467367.7750525,
+            "auxillary_file_paths": [
+                "results\\BuildTraining/MA_POCA/Init_GrabFix\\Hider\\Hider-0.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "1.1.0",
+        "torch_version": "2.5.1+cu124"
+    }
+}

@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: HiderRampsBufferSensor
-  m_ObservableSize: 7
+  m_ObservableSize: 10
   m_MaxNumObservables: 1
 --- !u!1 &1738357223548764316
 GameObject:
@@ -263,7 +263,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 919859fe66ab57f4fb348d01b25174c7, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 23a92ce83d2412843ad03ca7b9ba1066, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: Hider
@@ -451,7 +451,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: HiderEnemiesBufferSensor
-  m_ObservableSize: 7
+  m_ObservableSize: 10
   m_MaxNumObservables: 2
 --- !u!1 &3155126899359988536
 GameObject:
@@ -534,7 +534,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: HiderTeamBufferSensor
-  m_ObservableSize: 7
+  m_ObservableSize: 10
   m_MaxNumObservables: 2
 --- !u!1 &7124741934072579629
 GameObject:
@@ -581,7 +581,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: HiderBoxesBufferSensor
-  m_ObservableSize: 7
+  m_ObservableSize: 10
   m_MaxNumObservables: 2
 --- !u!1 &7133790729263851438
 GameObject:

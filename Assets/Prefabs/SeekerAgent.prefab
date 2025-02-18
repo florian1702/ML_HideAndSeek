@@ -247,7 +247,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: bf972376759209a4cb185688c9a9734d, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: ee7e89da7c0958a41b6065e6cc5025fb, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: Seeker
@@ -590,7 +590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: SeekerRampsBufferSensor
-  m_ObservableSize: 10
+  m_ObservableSize: 7
   m_MaxNumObservables: 1
 --- !u!1 &6109087468012199508
 GameObject:
@@ -673,7 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: SeekerBoxesBufferSensor
-  m_ObservableSize: 10
+  m_ObservableSize: 7
   m_MaxNumObservables: 2
 --- !u!1 &7905461371425799733
 GameObject:
@@ -720,7 +720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: SeekerTeamBufferSensor
-  m_ObservableSize: 10
+  m_ObservableSize: 7
   m_MaxNumObservables: 2
 --- !u!1 &8643357260696453078
 GameObject:
@@ -767,5 +767,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SensorName: SeekerEnemiesBufferSensor
-  m_ObservableSize: 10
+  m_ObservableSize: 7
   m_MaxNumObservables: 2

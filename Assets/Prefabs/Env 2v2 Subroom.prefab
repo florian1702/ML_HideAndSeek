@@ -49,21 +49,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84c403ca236f5104faffe2a3d540b91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trainer: 0
   episodeSteps: 500
   preparationPhaseFraction: 0.4
   coneAngle: 67.5
   mapGenerator: {fileID: 2288620831828099929}
-  trainer: 0
   rewards:
-  - type: 1
-    weight: 10
   - type: 0
-    weight: 1
+    value: 1
+  - type: 1
+    value: 10
   arenaSize: 25
-  debugDrawBoxHold: 1
-  debugDrawVisibility: 1
+  debugDrawInteractableHolding: 0
+  debugDrawAgentsFOV: 1
   debugDrawIndividualReward: 1
-  debugDrawPlayAreaBounds: 1
+  debugDrawArenaBounds: 0
 --- !u!114 &2288620831828099929
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -715,15 +715,7 @@ PrefabInstance:
       value: Env (2)
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: trainer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: debugDrawBoxHold
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: debugDrawAgentsFOV
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
@@ -731,35 +723,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: debugDrawArenaBounds
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
       propertyPath: debugDrawPlayAreaBounds
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: debugDrawIndividualReward
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: rewards.Array.data[0].type
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: rewards.Array.data[1].type
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: rewards.Array.data[0].value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: rewards.Array.data[1].value
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 614172738818507143, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}
-      propertyPath: debugDrawInteractableHolding
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2518838290219750159, guid: 1b4924ce09722ab48a79f102a69eda86, type: 3}

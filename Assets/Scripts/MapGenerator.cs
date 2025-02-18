@@ -74,6 +74,9 @@ public class MapGenerator : MonoBehaviour
     // Generates the map
     public void Generate()
     {
+        // Random Subroom generation(50/50)
+        //generateSubroom = Random.Range(0, 2) == 1;
+
         // Destroy all walls and create a new list
         generatedWalls?.ForEach((GameObject wall) => Destroy(wall));
         generatedWalls = new List<GameObject>();

@@ -46,7 +46,7 @@ public class HideAndSeekAgent : Agent
         {
             if (AgentSeesEntity(entity.gameObject, out RaycastHit hit))
             {
-                float[] obs = new float[7];
+                float[] obs = new float[10];
                 Vector3 relativePosition = entity.transform.position - transform.position;
                 obs[0] = relativePosition.x;
                 obs[1] = relativePosition.y;
@@ -56,10 +56,10 @@ public class HideAndSeekAgent : Agent
                 obs[5] = entity.GetComponent<Rigidbody>()?.linearVelocity.y ?? 0f;
                 obs[6] = entity.GetComponent<Rigidbody>()?.linearVelocity.z ?? 0f;
                 
-                //Vector3 entityScale = entity.transform.localScale;
-                //obs[7] = entityScale.x;
-                //obs[8] = entityScale.y;
-                //obs[9] = entityScale.z;
+                Vector3 entityScale = entity.transform.localScale;
+                obs[7] = entityScale.x;
+                obs[8] = entityScale.y;
+                obs[9] = entityScale.z;
                 sensor.AppendObservation(obs);
             }
         }
@@ -79,7 +79,7 @@ public class HideAndSeekAgent : Agent
         {
             agentActions.GrabInteractable();
         }
-        else if (actions.DiscreteActions[0] == 0 && agentActions.IsHolding)
+        else if (actions.DiscreteActions[0] == 2 && agentActions.IsHolding)
         {
             agentActions.ReleaseInteractable();
         }

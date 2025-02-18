@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84c403ca236f5104faffe2a3d540b91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trainer: 0
+  trainer: 1
   episodeSteps: 500
   preparationPhaseFraction: 0.4
   coneAngle: 67.5
@@ -62,7 +62,7 @@ MonoBehaviour:
   arenaSize: 25
   debugDrawInteractableHolding: 0
   debugDrawAgentsFOV: 1
-  debugDrawIndividualReward: 1
+  debugDrawIndividualReward: 0
   debugDrawArenaBounds: 0
 --- !u!114 &2288620831828099929
 MonoBehaviour:

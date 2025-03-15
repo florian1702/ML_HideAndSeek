@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 614172738818507143}
   - component: {fileID: 2288620831828099929}
   m_Layer: 0
-  m_Name: Env 2v2 Subroom
+  m_Name: Env 2v2 Subroom PPO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84c403ca236f5104faffe2a3d540b91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trainer: 1
+  trainer: 0
   episodeSteps: 500
   preparationPhaseFraction: 0.4
   coneAngle: 67.5
@@ -60,10 +60,10 @@ MonoBehaviour:
   - type: 1
     value: 10
   arenaSize: 25
-  debugDrawInteractableHolding: 0
+  debugDrawInteractableHolding: 1
   debugDrawAgentsFOV: 1
-  debugDrawIndividualReward: 0
-  debugDrawArenaBounds: 0
+  debugDrawIndividualReward: 1
+  debugDrawArenaBounds: 1
 --- !u!114 &2288620831828099929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -84,8 +84,8 @@ MonoBehaviour:
   wallsPosition: 0
   floorGameObject: {fileID: 6361461611200004095}
   agentParent: {fileID: 7590566968053437817}
-  hiderPrefab: {fileID: 8944095238844758982, guid: d70584e9a8064c1459f0d69689c5730f, type: 3}
-  seekerPrefab: {fileID: 8944095238844758982, guid: 02d89880ee1bbb44986514f0b6c40e29, type: 3}
+  hiderPrefab: {fileID: 8944095238844758982, guid: bac92ddbd031c2e45a997e586b317c5b, type: 3}
+  seekerPrefab: {fileID: 8944095238844758982, guid: 111b0620e7c827c428a9c0fc6cbd28fe, type: 3}
   numHidersMin: 2
   numHidersMax: 2
   numSeekersMin: 2

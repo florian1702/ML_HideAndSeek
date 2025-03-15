@@ -46,21 +46,36 @@ public class HideAndSeekAgent : Agent
         {
             if (AgentSeesEntity(entity.gameObject, out RaycastHit hit))
             {
-                float[] obs = new float[10];
-                Vector3 relativePosition = entity.transform.position - transform.position;
-                obs[0] = relativePosition.x;
-                obs[1] = relativePosition.y;
-                obs[2] = relativePosition.z;
-                obs[3] = NormalizeAngle(entity.transform.rotation.eulerAngles.y);
-                obs[4] = entity.GetComponent<Rigidbody>()?.linearVelocity.x ?? 0f;
-                obs[5] = entity.GetComponent<Rigidbody>()?.linearVelocity.y ?? 0f;
-                obs[6] = entity.GetComponent<Rigidbody>()?.linearVelocity.z ?? 0f;
-                
-                Vector3 entityScale = entity.transform.localScale;
-                obs[7] = entityScale.x;
-                obs[8] = entityScale.y;
-                obs[9] = entityScale.z;
-                sensor.AppendObservation(obs);
+                if(agentActions.GameManager.UsedTrainer == GameManager.Trainer.MA_POCA){
+                    float[] obs = new float[10];
+                    Vector3 relativePosition = entity.transform.position - transform.position;
+                    obs[0] = relativePosition.x;
+                    obs[1] = relativePosition.y;
+                    obs[2] = relativePosition.z;
+                    obs[3] = NormalizeAngle(entity.transform.rotation.eulerAngles.y);
+                    obs[4] = entity.GetComponent<Rigidbody>()?.linearVelocity.x ?? 0f;
+                    obs[5] = entity.GetComponent<Rigidbody>()?.linearVelocity.y ?? 0f;
+                    obs[6] = entity.GetComponent<Rigidbody>()?.linearVelocity.z ?? 0f;
+                    
+                    // Add scale of the entity (I only used this for Training with MA-POCA)
+                    Vector3 entityScale = entity.transform.localScale;
+                    obs[7] = entityScale.x;
+                    obs[8] = entityScale.y;
+                    obs[9] = entityScale.z;
+                    sensor.AppendObservation(obs);
+                }
+                else if(agentActions.GameManager.UsedTrainer == GameManager.Trainer.PPO){
+                    float[] obs = new float[7];
+                    Vector3 relativePosition = entity.transform.position - transform.position;
+                    obs[0] = relativePosition.x;
+                    obs[1] = relativePosition.y;
+                    obs[2] = relativePosition.z;
+                    obs[3] = NormalizeAngle(entity.transform.rotation.eulerAngles.y);
+                    obs[4] = entity.GetComponent<Rigidbody>()?.linearVelocity.x ?? 0f;
+                    obs[5] = entity.GetComponent<Rigidbody>()?.linearVelocity.y ?? 0f;
+                    obs[6] = entity.GetComponent<Rigidbody>()?.linearVelocity.z ?? 0f;
+                    sensor.AppendObservation(obs);
+                }      
             }
         }
     }

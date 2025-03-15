@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
 
     public float ArenaSize{ get { return arenaSize; } }
     public float ConeAngle{ get { return coneAngle; } }
+    public Trainer UsedTrainer{ get { return trainer; } }
+
     public bool DebugDrawBoxHold => debugDrawInteractableHolding;
     public bool DebugDrawIndividualReward => debugDrawIndividualReward;
     public bool PreparationPhaseEnded

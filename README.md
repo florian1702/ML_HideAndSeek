@@ -43,18 +43,6 @@ The seekers will enhance their detection skills while the hiders develop clever 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] Map Generation
-- [x] Interactables
-- [x] Agent Behaviour
-- [ ] Training
-- [ ] Polishing (Animations, Sounds ...)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 ### Built With
 
 [![C#][cs.com]][cs-url]
